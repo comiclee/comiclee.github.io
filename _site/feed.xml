@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>前端栗仔 | Thinking in Front-end</title>
+    <description>Thinking in Front-end</description>
+    <link>http://blog.comiclee.com/</link>
+    <atom:link href="http://blog.comiclee.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Mon, 02 Mar 2015 17:36:40 +0800</pubDate>
+    <lastBuildDate>Mon, 02 Mar 2015 17:36:40 +0800</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>柴静雾霾调查：穹顶之下</title>
+        <description>&lt;p&gt;保护环境，从你我做起！&lt;/p&gt;
+</description>
+        <pubDate>Mon, 02 Mar 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/03/%e6%9f%b4%e9%9d%99%e9%9b%be%e9%9c%be%e8%b0%83%e6%9f%a5%ef%bc%9a%e7%a9%b9%e9%a1%b6%e4%b9%8b%e4%b8%8b</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/03/%e6%9f%b4%e9%9d%99%e9%9b%be%e9%9c%be%e8%b0%83%e6%9f%a5%ef%bc%9a%e7%a9%b9%e9%a1%b6%e4%b9%8b%e4%b8%8b</guid>
+        
+        
+        <category>未分类</category>
+        
+      </item>
+    
+      <item>
+        <title>BFC、浮动、清除和hasLayout</title>
+        <description>&lt;p&gt;BFC——Block Formatting Context，块级格式化上下文，是CSS渲染的一个概念。我们在大多数的使用场景下并没有受到这个概念的影响，或者我们了解表象却不明白原因，所以容易忽视它，但遇到一些“诡异”的排版问题时，了解这个概念能够让我们更好地认清问题的本质。比如本文着重讲的和浮动有关的问题。&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;bfc&quot;&gt;产生BFC的条件&lt;/h1&gt;
+
+&lt;p&gt;以下情况会创建一个BFC：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;根元素或其它包含它的元素&lt;/li&gt;
+  &lt;li&gt;浮动 (元素的 float 不为 none)&lt;/li&gt;
+  &lt;li&gt;绝对定位元素 (元素的 position 为 absolute 或 fixed)&lt;/li&gt;
+  &lt;li&gt;内联块 inline-blocks (元素的 display: inline-block)&lt;/li&gt;
+  &lt;li&gt;表格单元格 (元素的 display: table-cell，HTML表格单元格默认属性)&lt;/li&gt;
+  &lt;li&gt;表格标题 (元素的 display: table-caption, HTML表格标题默认属性)&lt;/li&gt;
+  &lt;li&gt; overflow 的值不为 visible的元素&lt;/li&gt;
+  &lt;li&gt;弹性盒 flex boxes (元素的 display: flex 或 inline-flex)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;要注意区分BFC和块级元素，它们是不一样的概念，从上面的产生BFC的条件看，并非每个块级元素都会创建BFC。BFC相当于是一个虚拟空间，创造BFC的元素的子元素就处在这个空间中，而如果子元素符合创造BFC的条件，那么它也会创造独立的BFC，它的子孙就处于新的BFC中了。&lt;/p&gt;
+
+&lt;h1 id=&quot;bfc-1&quot;&gt;BFC对于布局的影响&lt;/h1&gt;
+
+&lt;p&gt;根据w3c的规范，在一个BFC中，盒子(boxes)从BFC的顶端往下，一个挨着一个垂直放置。相邻盒子之间的垂直距离取决于它们的margin属性，同一个BFC中，相邻块级盒子之间的垂直margin值会折叠。这句话包含几个限定条件，边距折叠的分析在以后的文章中再展开，这次仅注意到&lt;strong&gt;边距折叠只发生在同一个BFC中&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h1 id=&quot;bfc-2&quot;&gt;BFC对浮动的影响&lt;/h1&gt;
+
+&lt;p&gt;理解BFC的概念能够更好地理解浮动和清除时出现的现象。&lt;br /&gt;
+根据w3c的规范，在BFC中，每个盒子的左外边缘(edge)都会触及BFC的左边缘，甚至浮动元素存在的时候也是这样（尽管盒子的行盒&lt;em&gt;line boxes&lt;/em&gt;会因为浮动元素而被压缩），除非盒子创建了一个新的BFC。&lt;/p&gt;
+
+&lt;p&gt;例1：为了理解上面的话，我们做一个简单的实验，在3个盒子中设置中间的盒子是float:left的，可以看到，浮动元素后面的元素仍然靠着左边缘，尽管文字被挤压了。&lt;/p&gt;
+
+&lt;table width=&quot;799.0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      &lt;style&gt;&lt;br /&gt; .small {width:50px; height:50px;}&lt;br /&gt; .middle {width:100px; height:100px;}&lt;br /&gt; .big {width:150px; height:150px;}&lt;br /&gt; .red {background-color:red;opacity:.5;}&lt;br /&gt; .yellow {background-color:yellow;opacity:.5;}&lt;br /&gt; .blue {background-color:blue;opacity:.5;}&lt;br /&gt; .float {float:left}&lt;br /&gt; .clear {clear:both}&lt;br /&gt; .newbfc {overflow:auto}&lt;br /&gt; &lt;/style&gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;middle yellow&amp;#8221;&amp;gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;middle red float&amp;#8221;&amp;gt;哈哈哈哈哈哈哈哈哈哈&lt;br /&gt; &amp;lt;div class=&amp;#8221;big blue&amp;#8221;&amp;gt;哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-155&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/1.jpeg&quot; alt=&quot;例1&quot; width=&quot;152&quot; height=&quot;235&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;例2：接下来，给浮动元素后面的div设置overflow:auto，使其创建BFC，于是它跑到浮动元素的右边了。这里选择overflow:auto，因为这个属性自身没有排列布局的功效，但是因为这样设置创建了BFC，最终影响到了它的位置&lt;/p&gt;
+
+&lt;table width=&quot;799.0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      &amp;lt;div class=&amp;#8221;middle yellow&amp;#8221;&amp;gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;middle red float&amp;#8221;&amp;gt;哈哈哈哈哈哈哈哈哈哈&lt;br /&gt; &amp;lt;div class=&amp;#8221;big blue &lt;span style=&quot;color: #ff2600;&quot;&gt;newbfc&lt;/span&gt;&amp;#8220;&amp;gt;哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-156&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/2.jpeg&quot; alt=&quot;例2&quot; width=&quot;244&quot; height=&quot;239&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;section&quot;&gt;浮动和清除&lt;/h1&gt;
+
+&lt;p&gt;clear属性用于清除浮动，它将元素移动到浮动元素的下方。而该属性起作用的元素并不需要是浮动元素的兄弟元素，为了解释这一设定，可以构造出复杂的嵌套来分析其产生特殊布局的原因。不过我们还是把问题说得简单一点，以便于理解。&lt;/p&gt;
+
+&lt;p&gt;例3：我们仍然对例1进行一些修改，这一次，我们在蓝色的盒子里放一个小的带有clear属性的盒子，同时再给蓝色的盒子设置一个左边距&lt;/p&gt;
+
+&lt;table width=&quot;799.0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      &amp;lt;div class=&amp;#8221;middle yellow&amp;#8221;&amp;gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;middle red float&amp;#8221;&amp;gt;哈哈哈哈哈哈哈哈哈哈&lt;br /&gt; &amp;lt;div class=&amp;#8221;big blue&amp;#8221; style=&amp;#8221;margin-left:150px&amp;#8221;&amp;gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;small yellow &lt;span style=&quot;color: #ff2600;&quot;&gt;clear&lt;/span&gt;&amp;#8220;&amp;gt;&lt;br /&gt; 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈&lt;br /&gt; 
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-157&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/3.jpeg&quot; alt=&quot;例3&quot; width=&quot;250&quot; height=&quot;279&quot; /&gt;&lt;br /&gt;
+结果是不是和你想的一样呢？哈哈。蓝色盒子里的小黄盒子（由于颜色叠加的原因，它变成了不知什么色）左边距离浮动的红盒子那么远，可还是不敢和红盒平起平坐，只能委屈地在红盒的下面。因为蓝盒及其子元素仍然处在先前的BFC中，所以它的clear属性是仍然能和浮动元素发生作用的，这一场景我们常常能在运用浮动时遇到，特别是在蓝盒中也有浮动元素的情况下，如下面例4&lt;/p&gt;
+
+&lt;p&gt;例4：&lt;/p&gt;
+
+&lt;table width=&quot;799.0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      &amp;lt;div class=&amp;#8221;middle yellow&amp;#8221;&amp;gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;middle red &lt;span style=&quot;color: #ff2600;&quot;&gt;float&lt;/span&gt;&amp;#8220;&amp;gt;哈哈哈哈哈哈哈哈哈哈&lt;br /&gt; &amp;lt;div class=&amp;#8221;big blue&amp;#8221; style=&amp;#8221;margin-left:150px&amp;#8221;&amp;gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;small yellow &lt;span style=&quot;color: #ff2600;&quot;&gt;float&lt;/span&gt;”&amp;gt;5&lt;br /&gt; &amp;lt;div class=&amp;#8221;small yellow &lt;span style=&quot;color: #ff2600;&quot;&gt;clear&lt;/span&gt;”&amp;gt;4&lt;br /&gt; 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈&lt;br /&gt; 
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-158&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/4.jpeg&quot; alt=&quot;例4&quot; width=&quot;248&quot; height=&quot;270&quot; /&gt;&lt;br /&gt;
+我们只是想让div4清除div5的浮动的影响，但是因为红色浮动元素的影响，导致它并没有直接排在div5下边，而是排在红色块下缘的水平线以下。那如何达到我们想实现的效果呢？借用前面说的BFC的知识，我们给蓝色方块创建一个BFC：&lt;/p&gt;
+
+&lt;p&gt;例5：&lt;/p&gt;
+
+&lt;table width=&quot;799.0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      &amp;lt;div class=&amp;#8221;middle yellow&amp;#8221;&amp;gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;middle red float&amp;#8221;&amp;gt;哈哈哈哈哈哈哈哈哈哈&lt;br /&gt; &amp;lt;div class=&amp;#8221;big blue &lt;span style=&quot;color: #ff2600;&quot;&gt;newbfc&lt;/span&gt;&amp;#8221; style=&amp;#8221;margin-left:150px&amp;#8221;&amp;gt;&lt;br /&gt; &amp;lt;div class=&amp;#8221;small yellow float&amp;#8221;&amp;gt;5&lt;br /&gt; &amp;lt;div class=&amp;#8221;small yellow clear&amp;#8221;&amp;gt;4&lt;br /&gt; 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈&lt;br /&gt; 
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-159&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/5.jpeg&quot; alt=&quot;例5&quot; width=&quot;226&quot; height=&quot;195&quot; /&gt;&lt;br /&gt;
+创建BFC有很多方法，都会产生一些副作用，所以按照实际需求选用一个即可。此处也可以选择display:inline-block触发BFC，而保持display:visible的效果，但也会引起其它的副作用，读者可以尝试一下。&lt;/p&gt;
+
+&lt;h1 id=&quot;clearclearance&quot;&gt;clear元素的边距和clearance&lt;/h1&gt;
+
+&lt;p&gt;最后介绍一下clearance。清除了浮动的元素，其margin-top值产生的效果可能在你的意料之外，我们继续修改例5，给方块4设置margin-top值为10px，-10px，60px看看.&lt;/p&gt;
+
+&lt;p&gt;例6：&lt;br /&gt;
+&lt;img class=&quot;alignleft  wp-image-160&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/61.jpeg&quot; alt=&quot;例6&quot; width=&quot;178&quot; height=&quot;151&quot; /&gt; &lt;img class=&quot;alignleft  wp-image-161&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/62.jpeg&quot; alt=&quot;例6&quot; width=&quot;179&quot; height=&quot;154&quot; /&gt; &lt;img class=&quot;alignleft  wp-image-162&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/63.jpeg&quot; alt=&quot;例6&quot; width=&quot;183&quot; height=&quot;154&quot; /&gt;&lt;/p&gt;
+
+&lt;p style=&quot;clear: both;&quot;&gt;
+  可以看出，margin-top设为10px和-10px都“没有作用”，利用开发者工具看元素的包围情况，可以看到方块4的上边距并没有把它和方块5拉开，好像是举着一根棍子，试图够着蓝色方块的上边缘，可以想象这跟棍子足够长的话就能抵到上边缘，并把方块4顶开（如将margin-top设为60px）。而中间还有的40px的空间就是clearance。
+&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-163&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/64.jpeg&quot; alt=&quot;例6&quot; width=&quot;324&quot; height=&quot;209&quot; /&gt;&lt;br /&gt;
+根据w3c的规范，clearance抑制边距折叠，并填充元素margin-top之上的空间，将元素在垂直方向推过浮动元素。它的值恰好让元素的边沿和被清除的浮动元素的下外边沿水平。我们在开发的时候不需要去计算clearance，只需要知道出现这种现象的原因是什么即可。&lt;/p&gt;
+
+&lt;h1 id=&quot;ie67&quot;&gt;IE6,7下的效果&lt;/h1&gt;
+
+&lt;p&gt;IE8以上的显示效果与w3c的规范一致，但在IE6,7（标准模式）下，显示效果又有所不同。造成这样的效果的原因一方面是由于其自身的bug，另一方面是由Layout（布局）造成的。我们先不讨论Layout，但是需要对例子做一些修改，我们把蓝盒的width和height样式属性去掉，通过增加其内部的文字把蓝盒撑大，并把浏览器窗口缩小以便看得更容易。由于IE6和IE7的显示效果差不多，如果没有太大的差别，我们就只用IE6举例。&lt;/p&gt;
+
+&lt;p&gt;例1-1&lt;/p&gt;
+
+&lt;pre class=&quot;lang:xhtml decode:true&quot;&gt;&amp;lt;style&amp;gt;
+.small {width:50px; height:50px;}
+.middle {width:100px; height:100px;}
+.big {width:150px; height:150px;}
+.red {background-color:red;filter:alpha(opacity=50);}
+.yellow {background-color:yellow;filter:alpha(opacity=50);}
+.blue {background-color:blue;filter:alpha(opacity=50);}
+.float {float:left}
+.clear {clear:both}
+.newbfc {overflow:auto}
+&amp;lt;/style&amp;gt;
+&amp;lt;div class=&quot;middle yellow&quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;div class=&quot;middle red float&quot;&amp;gt;哈哈哈哈哈哈哈哈哈哈&amp;lt;/div&amp;gt;
+&amp;lt;div class=&quot;blue&quot;&amp;gt;
+哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+&amp;lt;/div&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-172&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-4@2x.png&quot; alt=&quot;例1-1&quot; width=&quot;240&quot; height=&quot;189&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其显示效果和例1差不多。然后我们看看例2在IE6下的效果：&lt;/p&gt;
+
+&lt;p&gt;例2-1：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:xhtml decode:true&quot;&gt;&amp;lt;div class=&quot;middle yellow&quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;div class=&quot;middle red float&quot;&amp;gt;哈哈哈哈哈哈哈哈哈哈&amp;lt;/div&amp;gt;
+&amp;lt;div class=&quot;blue &lt;span style=&quot;color: #ff0000;&quot;&gt;newbfc&lt;/span&gt;&quot;&amp;gt;
+哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+&amp;lt;/div&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;IE6：&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-172&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-4@2x.png&quot; alt=&quot;例1-1&quot; width=&quot;240&quot; height=&quot;189&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;IE7：&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-173&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-5@2x.png&quot; alt=&quot;例2-1&quot; width=&quot;232&quot; height=&quot;310&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过设置overflow:auto，在IE6下无效，在IE7下却能显示出创建了新的BFC后的效果。&lt;/p&gt;
+
+&lt;p&gt;例3-1：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:xhtml decode:true&quot;&gt;&amp;lt;div class=&quot;middle yellow&quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;div class=&quot;middle red float&quot;&amp;gt;哈哈哈哈哈哈哈哈哈哈&amp;lt;/div&amp;gt;
+&amp;lt;div class=&quot;blue&quot; style=&quot;margin-left:150px&quot;&amp;gt;
+  &amp;lt;div class=&quot;small yellow clear&quot;&amp;gt;&amp;lt;/div&amp;gt;
+  哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+&amp;lt;/div&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-174&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-6@2x.png&quot; alt=&quot;例3-1&quot; width=&quot;234&quot; height=&quot;303&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;咦，好像出现了类似bug的东西。拥有clear属性的方块不但自己跑了下来，还把外层的蓝色方块也拉了下来。嗯，其实这里是发生了边距折叠，我们可以给蓝块设置一个border-top来试验一下&lt;/p&gt;
+
+&lt;p&gt;例3-1-1：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:xhtml decode:true&quot;&gt;&amp;lt;div class=&quot;middle yellow&quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;div class=&quot;middle red float&quot;&amp;gt;哈哈哈哈哈哈哈哈哈哈&amp;lt;/div&amp;gt;
+&amp;lt;div class=&quot;blue&quot; style=&quot;margin-left:150px;border-top:1px dashed;&quot;&amp;gt;
+  &amp;lt;div class=&quot;small yellow clear&quot;&amp;gt;&amp;lt;/div&amp;gt;
+  哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+&amp;lt;/div&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-175&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-7@2x.png&quot; alt=&quot;例3-1-1&quot; width=&quot;224&quot; height=&quot;229&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;但这里的边距折叠是IE6、7的一个bug，因为根据w3c规定，clear元素不会发生边距折叠。&lt;/p&gt;
+
+&lt;p&gt;接下来看看例4，这个表现和预想的一致&lt;/p&gt;
+
+&lt;p&gt;例4-1：&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-176&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-8@2x.png&quot; alt=&quot;例4-1&quot; width=&quot;223&quot; height=&quot;224&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;例5在IE6和IE7下也是有差别的，IE7同样能显示出创建新bfc后的效果，而IE6却没有变化&lt;/p&gt;
+
+&lt;p&gt;例5-1&lt;/p&gt;
+
+&lt;p&gt;IE6：&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-177&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-9@2x.png&quot; alt=&quot;例5-1&quot; width=&quot;216&quot; height=&quot;196&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;IE7：&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-178&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-10@2x.png&quot; alt=&quot;例5-1&quot; width=&quot;212&quot; height=&quot;179&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最后我们看看clearance在IE6、7下的表现如何&lt;/p&gt;
+
+&lt;p&gt;例6-1&lt;/p&gt;
+
+&lt;p&gt;IE6&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-179&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-13@2x.png&quot; alt=&quot;例6-1&quot; width=&quot;212&quot; height=&quot;197&quot; /&gt;&lt;img class=&quot;alignnone  wp-image-180&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-14@2x.png&quot; alt=&quot;例6-1&quot; width=&quot;198&quot; height=&quot;196&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;IE7&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone  wp-image-181&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-11@2x.png&quot; alt=&quot;例6-1&quot; width=&quot;204&quot; height=&quot;179&quot; /&gt;&lt;img class=&quot;alignnone  wp-image-182&quot; src=&quot;http://blog.comiclee.com/wp-content/uploads/2015/02/QQ20150213-12@2x.png&quot; alt=&quot;例6-1&quot; width=&quot;210&quot; height=&quot;178&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在IE6、7下根本没有clearance的概念，它的行为却更符合我们一般的认识。由于IE6、7和其它浏览器的这一差别，&lt;span style=&quot;color: #ff0000;&quot;&gt;&lt;strong&gt;我们对待clear元素要更加慎重一些，尽量避免需要专门给IE6、7做hack的情况&lt;/strong&gt;&lt;/span&gt;。&lt;/p&gt;
+
+&lt;p&gt;最后我们看看为什么newbfc这个class在IE7下似乎是生效的，而在IE6下却不生效。这就引出IE6、7下特有的概念——hasLayout&lt;/p&gt;
+
+&lt;h1 id=&quot;haslayout&quot;&gt;hasLayout&lt;/h1&gt;
+
+&lt;p&gt;hasLayout是在IE6、7下特有的概念，在IE8以后就废弃了。一个元素触发hasLayout的效果类似于其创建了新的BFC。&lt;/p&gt;
+
+&lt;p&gt;那么要如何触发hasLayout呢？默认拥有布局的元素有：&lt;/p&gt;
+
+&lt;p&gt;html，body，table，tr，th，td，iframe，object, applet，img，hr，input，button，select，textarea，fieldset，legend等。&lt;/p&gt;
+
+&lt;p&gt;设置以下属性会使一个元素拥有布局：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;position:absolute&lt;/li&gt;
+  &lt;li&gt;float:left or right&lt;/li&gt;
+  &lt;li&gt;display:inline-block&lt;/li&gt;
+  &lt;li&gt;width:any value other than auto&lt;/li&gt;
+  &lt;li&gt;height:any value other than auto&lt;/li&gt;
+  &lt;li&gt;zoom:any value other than normal&lt;/li&gt;
+  &lt;li&gt;writing-mode:tb-rl&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;IE7还可以通过以下属性设置hasLayout：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;overflow:hidden or scroll or auto&lt;/li&gt;
+  &lt;li&gt;overflow-x:hidden or scroll or auto&lt;/li&gt;
+  &lt;li&gt;overflow-y:hidden or scroll or auto&lt;/li&gt;
+  &lt;li&gt;min-width:any value other than auto&lt;/li&gt;
+  &lt;li&gt;max-width:any value other than auto&lt;/li&gt;
+  &lt;li&gt;min-height:any value other than auto&lt;/li&gt;
+  &lt;li&gt;max-height:any value other than auto&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;可以看出，在上面的例子中，设置overflow:auto是可以在IE7中触发hasLayout的，而在IE6中不行，不过只需要给元素设置width或height属性就可以让其拥有布局。所以我们在布局的时候，为了达到浏览器显示的一致性，往往需要考虑&lt;span style=&quot;color: #ff0000;&quot;&gt;&lt;strong&gt;同时触发hasLayout以及创建BFC&lt;/strong&gt;&lt;/span&gt;。&lt;/p&gt;
+
+&lt;h1 id=&quot;section-1&quot;&gt;参考资料&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.w3.org/TR/CSS21/visuren.html#block-formatting&quot; target=&quot;_blank&quot;&gt;http://www.w3.org/TR/CSS21/visuren.html#block-formatting&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.mozilla.org/zh-CN/docs/Web/CSS/Block_formatting_context&quot; target=&quot;_blank&quot;&gt;https://developer.mozilla.org/zh-CN/docs/Web/CSS/Block_formatting_context&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.sitepoint.com/web-foundations/internet-explorer-haslayout-property/&quot; target=&quot;_blank&quot;&gt;http://www.sitepoint.com/web-foundations/internet-explorer-haslayout-property/&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;本文固定链接：&lt;a href=&quot;http://blog.comiclee.com/?p=154&quot;&gt;http://blog.comiclee.com/?p=154&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 12 Feb 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/02/bfc%e6%b5%ae%e5%8a%a8%e6%b8%85%e9%99%a4%e5%92%8chaslayout</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/02/bfc%e6%b5%ae%e5%8a%a8%e6%b8%85%e9%99%a4%e5%92%8chaslayout</guid>
+        
+        <category>css</category>
+        
+        
+        <category>css</category>
+        
+      </item>
+    
+      <item>
+        <title>ECMAScript5新特性</title>
+        <description>&lt;p&gt;现在写这篇文章有点晚了，毕竟ECMAScript5在2009年就发布了。但是当时支持的浏览器还很少，经过这几年的发展，主流浏览器对ECMAScript5已经大都支持了（不过IE8仍然占有很大的份额），我们再重新看看ECMAScript5里有哪些新特性我们可用的。&lt;/p&gt;
+
+&lt;p&gt;ECMAScript支持的浏览器为IE9+，chrome23+，safari6+，IOS7/8，其它份额很小的浏览器我就没有列出来了，具体可以看 &lt;a href=&quot;http://kangax.github.io/compat-table/es5/&quot;&gt;http://kangax.github.io/compat-table/es5/&lt;/a&gt;&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; style=&quot;table-layout: fixed&quot;&gt;
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.create
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      创建一个拥有指定原型和若干个指定属性的对象
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.defineProperty
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      该方法允许精确添加或修改对象的属性。正常的属性添加通过赋值来创建并显示在属性枚举中（for&amp;#8230;in 循环 或 Object.keys 方法）， 这种方式添加的属性值可能被改变，也可能会被 删除。该方法允许改变这些额外细节的默认设置。
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      可以定义这个属性的特性，如writable, get, set, confiurable, enumerable
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.defineProperties
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      批量defineProperty
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.getPrototypeOf
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回指定对象的原型（也就是该对象内部属性[[Prototype]]的值）
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.keys
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回一个由给定对象的所有可枚举自身属性的属性名组成的数组，数组中属性名的排列顺序和使用for-in循环遍历该对象时返回的顺序一致（两者的主要区别是 for-in 还会遍历出一个对象从其原型链上继承到的可枚举属性）
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.seal
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      让一个对象密封，并返回被密封后的对象。密封对象是指那些不能添加新的属性，不能删除已有属性，以及不能修改已有属性的可枚举性、可配置性、可写性，但可能可以修改已有属性的值的对象
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      检测：Object.isSealed
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.freeze
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      冻结一个对象。冻结对象是指那些不能添加新的属性，不能修改已有属性的值，不能删除已有属性，以及不能修改已有属性的可枚举性、可配置性、可写性的对象。也就是说，这个对象永远是不可变的。该方法返回被冻结的对象
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      和seal相比，值都不能改了检测：Object.isFrozen
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.preventExtensions
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      让一个对象变的不可扩展，也就是永远不能再添加新的属性
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      检测：Object.isExtensible
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.getOwnPropertyDescriptor
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回指定对象上一个自有属性对应的属性描述符。（自有属性指的是直接赋予该对象的属性，不需要从原型链上进行查找的属性）
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回其writable, get, set, confiurable, enumerable属性
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Object.getOwnPropertyNames
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性）组成的数组。
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      和keys的区别是它可以列出不可枚举的值
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Date.prototype.toISOString
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回一个 ISO（ISO 8601 Extended Format）格式的字符串： YYYY-MM-DDTHH:mm:ss.sssZ。时区总是UTC（协调世界时），加一个后缀“Z”标识
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Date.now
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回自1970年1月1日 00:00:00 UTC到当前时间的毫秒数
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.isArray
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      判断一个对象是否为数组,如果是,则返回true,否则返回false.
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      JSON
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      parse 解析JSON字符串, 可以选择改变前面解析后的值及其属性，然后返回解析的值。&lt;br /&gt; stringify 返回指定值的 JSON 字符串，可以自定义只包含某些特定的属性或替换属性值。
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      &lt;span style=&quot;color: #ff2600;&quot;&gt;IE8支持&lt;/span&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Function.prototype.bind
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      创建一个新函数,称为绑定函数.当调用这个绑定函数时,绑定函数会以创建它时传入 bind()方法的第一个参数作为 this,传入 bind() 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数.
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      String.prototype.trim
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      删除字符串两端的空白字符并返回.
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.indexOf
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回根据给定元素找到的第一个索引值，否则返回-1
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.lastIndexOf
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      返回指定元素（也即有效的 JavaScript 值或变量）在数组中的最后一个的索引，如果不存在则返回 -1。从数组的后面向前查找，从 fromIndex 处开始。
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.every
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      为数组中的每个元素执行一次 callback 函数，直到它找到一个使 callback 返回 falsy（表示可转换为布尔值 false 的值）的元素。如果发现了一个这样的元素，every 方法将会立即返回 false。否则，callback 为每一个元素返回 true，every 就会返回 true。
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.some
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      测试数组中的某些元素是否通过了指定函数的测试
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.forEach
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      让数组的每一项都执行一次给定的函数
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.map
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      给原数组中的每个元素都按顺序调用一次 callback 函数。callback 每次执行后的返回值组合起来形成一个新数组。 callback 函数只会在有值的索引上被调用；那些从来没被赋过值或者使用 delete 删除的索引则不会被调用。
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.filter
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      filter 为数组中的每个元素调用一次 callback 函数，并利用所有使得 callback 返回“真值”（即可转换为布尔值 true 的值）的元素创建一个新数组。callback 只会在已经赋值的索引上被调用，对于那些已经被删除或者从未被赋值的索引不会被调用。那些没有通过 callback 测试的元素只会被跳过，不会被包含在新数组中。
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.reduce
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      接收一个函数作为累加器（accumulator），数组中的每个值（从左到右）开始缩减，最终为一个值。
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Array.prototype.reduceRight
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      接受一个函数作为累加器（accumulator），让每个值（从右到左，亦即从尾到头）缩减为一个值。（与 reduce() 的执行方向相反）
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      getter和setter
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      var o={_name :&amp;#8217;o&amp;#8217;, get name(){return this._name}, set name(v) {this._name=v}};console.log(o.name);    //‘o&amp;#8217;
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Property access on strings
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      &amp;#8216;foobar&amp;#8217;[3]==&amp;#8217;b&amp;#8217;
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      &lt;span style=&quot;color: #ff2600;&quot;&gt;IE8支持&lt;/span&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      保留字作为对象属性
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      a={if:1}
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      0宽度字符作为名称
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      var _\u200c\u200d = true;&lt;br /&gt; return _\u200c\u200d;
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      parseInt忽视开头的&amp;#8217;0&amp;#8242;
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      parseInt(&amp;#8217;010&amp;#8242;) === 10;
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      undefined不可变
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td valign=&quot;top&quot;&gt;
+      Strict mode
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+      (function () {&amp;#8220;use strict&amp;#8221;;return !this;}())
+    &lt;/td&gt;
+    
+    &lt;td valign=&quot;top&quot;&gt;
+       &lt;span style=&quot;color: #ff2600;&quot;&gt;IE9不支持&lt;/span&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+</description>
+        <pubDate>Tue, 27 Jan 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/01/ecmascript5%e6%96%b0%e7%89%b9%e6%80%a7</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/01/ecmascript5%e6%96%b0%e7%89%b9%e6%80%a7</guid>
+        
+        <category>Javascript</category>
+        
+        
+        <category>javascript</category>
+        
+      </item>
+    
+      <item>
+        <title>计算一个目录的md5值</title>
+        <description>&lt;p&gt;使用Linux的md5sum命令可以计算出一个文件的md5值，这可以用于判断文件是否经过更改，使用方法如下：&lt;/p&gt;
+
+&lt;pre&gt;md5sum filename&lt;/pre&gt;
+
+&lt;p&gt;但md5sum命令无法作用于一个目录，那如何计算一个目录的md5呢？有一个思路是计算目录内所有文件的md5，然后再进行一次的md5计算。我们可以遍历目录，对所有文件进行计算：&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;pre&gt;sum=&#39;&#39;
+process() {
+  local dir=$1
+  for file in `ls $dir` ; do
+    local path=$dir/$file
+    if [ -d $path ] ; then
+      process $path 
+    elif [ -f $path ] ; then
+      sum=$sum$(md5sum $path)
+    fi
+  done
+}
+process pathname
+echo $sum | md5sum&lt;/pre&gt;
+
+&lt;p&gt;其实利用Linux的find命令，能够更方便快捷地达成目的&lt;/p&gt;
+
+&lt;pre&gt;find pathname -type f | xargs md5sum | md5sum&lt;/pre&gt;
+
+&lt;p&gt;当然，用这两种方法计算的md5是不一样的，要保证使用同一个md5算法，以免出问题。&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+</description>
+        <pubDate>Fri, 09 Jan 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/01/%e8%ae%a1%e7%ae%97%e4%b8%80%e4%b8%aa%e7%9b%ae%e5%bd%95%e7%9a%84md5%e5%80%bc</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/01/%e8%ae%a1%e7%ae%97%e4%b8%80%e4%b8%aa%e7%9b%ae%e5%bd%95%e7%9a%84md5%e5%80%bc</guid>
+        
+        <category>Linux</category>
+        
+        
+        <category>linux</category>
+        
+      </item>
+    
+      <item>
+        <title>手机html5页面进行拍照和照片处理</title>
+        <description>&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-背景&quot; style=&quot;color: #333333;&quot;&gt;
+  &lt;strong&gt;背景&lt;/strong&gt;
+&lt;/h1&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+   利用html5的API，在手机上也能够调起摄像头进行拍照、并对照片进行编辑。APP能做的h5也能做到，而且也不复杂。本文就介绍一下如何实现。
+&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-调起系统相机&quot; style=&quot;color: #333333;&quot;&gt;
+  &lt;strong&gt;调起系统相机&lt;/strong&gt;
+&lt;/h1&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+   使用type值为file，并设置accept属性的input标签，用户点击该元素即可唤起系统的摄像头/图库的菜单。如下：
+&lt;/p&gt;
+
+&lt;pre style=&quot;color: #333333;&quot;&gt;&amp;lt;input id=&quot;camera&quot; type=&quot;file&quot; accept=&quot;image/*&quot;&amp;gt;&lt;/pre&gt;
+
+&lt;div class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;
+&lt;/div&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  需要注意的是，在安卓的WebView中，改功能默认是关闭的，需要在程序中打开该功能。&lt;br /&gt; 拍完照片后，可以将照片当作文件进行表单提交，但手机拍的照片文件大小一般比较大，要占用不少的宝贵的移动流量，同时也需要用户长时间的等待，所以我们对照片进行一定的压缩再提交。首先，我们需要读取拍到的照片。
+&lt;/p&gt;
+
+&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-读取拍到的图片&quot; style=&quot;color: #333333;&quot;&gt;
+  &lt;strong&gt;读取拍到的图片&lt;/strong&gt;
+&lt;/h1&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+   html5提供了FileReader对象来读取本地文件，使用readAsDataURL读取文件的base64编码数据
+&lt;/p&gt;
+
+&lt;pre style=&quot;color: #333333;&quot;&gt;$(&#39;#camera&#39;).change(function(evt) {
+ if (evt.target.files.length&amp;gt;0) {
+  var file = evt.target.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+   var image = new Image();
+   image.onload = function() {
+    processImage(image);
+   };
+   image.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+ }
+});&lt;/pre&gt;
+
+&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-处理照片&quot; style=&quot;color: #333333;&quot;&gt;
+  &lt;strong&gt;处理照片&lt;/strong&gt;
+&lt;/h1&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  使用canvas进行图片处理，我们将图片按比例缩小绘制在canvas上。例如我们将图片的尺寸缩小到0.1
+&lt;/p&gt;
+
+&lt;pre class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;var canvas = document.getElementById(&#39;canvas&#39;);
+var ratio = 0.1;
+function processImage(image) {
+ var ctx = canvas.getContext(‘2d’);
+ canvas.width = image.width*ratio;
+ canvas.height = image.height*ratio;
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+}&lt;/pre&gt;
+
+&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-导出处理后的照片&quot; style=&quot;color: #333333;&quot;&gt;
+  &lt;strong&gt;导出处理后的照片&lt;/strong&gt;
+&lt;/h1&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  使用canvas的toDataURL方法导出处理后的图片的base64编码数据。可以在方法的参数中设定图片格式，默认值为image/png。
+&lt;/p&gt;
+
+&lt;pre class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;canvas.toDataURL(&#39;image/jpeg&#39;)&lt;/pre&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  由于base64格式的数据带有 &lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;http://dataimage/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;data:image/jpeg;base64&lt;/a&gt;, 这类的头，后端解析的时候需要把这个头去掉，这可以在前端做，也可以在后端做。
+&lt;/p&gt;
+
+&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-不得不提的坑&quot; style=&quot;color: #333333;&quot;&gt;
+  &lt;strong&gt;不得不提的坑&lt;/strong&gt;
+&lt;/h1&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  整个图片的处理流程并不是很复杂，但当我们实际操作的时候，却发现事实远没有那么简单。我们遇到两个大坑：&lt;br /&gt; 1. iphone拍的照片绘制出来会被压扁&lt;br /&gt; 2. 照片的旋转方向不正确
+&lt;/p&gt;
+
+&lt;p&gt;好在这两个问题有不少开发者也遇到过，我们在网上找到答案：&lt;br /&gt;
+1. 照片被压扁的问题可以参考&lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios&lt;/a&gt;&lt;/span&gt;&lt;/span&gt; ，利用答案中的detectVerticalSquash函数来对缩放比例进行修正。（这个函数出自&lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;https://github.com/stomita/ios-imagefile-megapixel&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;https://github.com/stomita/ios-imagefile-megapixel&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;，感谢stomita的工作）&lt;/p&gt;
+
+&lt;pre class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;ctx.drawImage(img, sx * vertSquashRatio, sy * vertSquashRatio,
+ sw * vertSquashRatio, sh * vertSquashRatio,
+ dx, dy, dw, dh );&lt;/pre&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  2. 利用Exif.js（&lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;https://github.com/jseidelin/exif-js&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;https://github.com/jseidelin/exif-js&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;）读取照片的旋转方向，并对Canvas进行旋转
+&lt;/p&gt;
+
+&lt;pre class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;$(&#39;#camera&#39;).change(function(evt) {
+ if (evt.target.files.length&amp;gt;0) {
+  var file = evt.target.files[0];
+ 
+  var rotation = 0;
+  EXIF.getData(file, function() {
+   var orientation = EXIF.getTag(this,&#39;Orientation&#39;);
+   switch (orientation) { //根据exif中照片的旋转信息对图片进行旋转
+    case 3: rotation=180; break;
+    case 6: rotation=90; break;
+    case 8: rotation=-90; break;
+    default : rotation=0;
+   }
+ 
+   var reader = new FileReader();
+   reader.onload = function(e) {
+    var image = new Image();
+    image.onload = function() {
+     processImage(image, rotation);
+    };
+    image.src = e.target.result;
+   };
+   reader.readAsDataURL(file);
+  });
+ }
+});
+ 
+//修改processImage函数
+var canvas = document.getElementById(&#39;canvas&#39;);
+var ratio = 0.1;
+function processImage(image,rotation) {
+ var ctx = canvas.getContext(&#39;2d&#39;);
+ var imageWidthOrigin = image.width;
+ var imageHeightOrigin = image.height;
+ var imageWidth = imageWidthOrigin*ratio;
+ var imageHeight = imageHeightOrigin*ratio;
+ 
+ canvas.width = imageWidth ;
+ 
+ canvas.height = imageHeight ;
+ var startX = 0;
+ var startY = 0;
+ 
+ if (rotation==90) {
+  canvas.width = imageHeight ;
+  canvas.height = imageWidth ;
+  startX = 0;
+  startY = -imageHeight;
+ } else if (rotation==-90) {
+  canvas.width = imageHeight ;
+  canvas.height = imageWidth ;
+  startX = -imageWidth;
+  startY = 0;
+ } else if (rotation==180 || rotation==-180) {
+  startX = -imageWidth;
+  startY = -imageHeight;
+ }
+ 
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.rotate(rotation*Math.PI/180);
+ 
+ var vertSquashRatio = detectVerticalSquash(image);
+ ctx.drawImage(image, 0, 0, imageWidthOrigin*vertSquashRatio, imageHeightOrigin*vertSquashRatio, startX, startY, imageWidth, imageHeight);
+}&lt;/pre&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+&lt;/p&gt;
+</description>
+        <pubDate>Wed, 07 Jan 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/01/%e6%89%8b%e6%9c%bahtml5%e9%a1%b5%e9%9d%a2%e8%bf%9b%e8%a1%8c%e6%8b%8d%e7%85%a7%e5%92%8c%e7%85%a7%e7%89%87%e5%a4%84%e7%90%86</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/01/%e6%89%8b%e6%9c%bahtml5%e9%a1%b5%e9%9d%a2%e8%bf%9b%e8%a1%8c%e6%8b%8d%e7%85%a7%e5%92%8c%e7%85%a7%e7%89%87%e5%a4%84%e7%90%86</guid>
+        
+        <category>html5</category>
+        
+        
+        <category>移动前端</category>
+        
+      </item>
+    
+      <item>
+        <title>Javascript的if判断以及相等运算(==)的类型转换规则</title>
+        <description>&lt;p&gt;Javascript的有些特性比较令人捉摸不透，例如以下的代码：&lt;/p&gt;
+
+&lt;pre&gt;if (&#39;0&#39;) alert(true); else alert(false);    //true
+if (&#39;0&#39;==true) alert(true); else alert(false);    //false&lt;/pre&gt;
+
+&lt;p&gt;按照程序员的正常思维，经过了隐式的类型转换，这两个语句应该得到相同的结果才对。可事实却出人意料。而这一切，都是由Javascript在这两种场景下的不同转换规则造成的。&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;boolean&quot;&gt;Boolean语境下的类型转换&lt;/h1&gt;
+
+&lt;p&gt;第一行语句if括号里的表达式预期得出一个Boolean值，于是系统自动调用Boolean方法，将’0′转换成Boolean值，该转换规则是将&lt;strong&gt;undefined&lt;/strong&gt;、&lt;strong&gt;null&lt;/strong&gt;、&lt;strong&gt;+0&lt;/strong&gt;、&lt;strong&gt;-0&lt;/strong&gt;、&lt;strong&gt;NaN&lt;/strong&gt;、&lt;strong&gt;”（空字符串）&lt;/strong&gt;返回false，其它的表达式返回true。’0′也返回true了。&lt;/p&gt;
+
+&lt;h1 id=&quot;section&quot;&gt;相等运算(==)下的类型转换&lt;/h1&gt;
+
+&lt;p&gt;第二行语句里有相等运算符，该运算符的转换规则则稍微有些复杂，这行语句得到的奇怪的结果也是因此而起。这里介绍一下相等运算符的转换规则：&lt;/p&gt;
+
+&lt;p&gt;** 1. Boolean值转成数字，false =&amp;gt; 0 , true =&amp;gt; 1**&lt;br /&gt;
+** 2. 如果一边是字符串，另一边是数字，则尝试把字符串转成数字**&lt;br /&gt;
+** 3. 如果一边是对象，另一边是字符串，则尝试把对象转成字符串**&lt;br /&gt;
+** 4. 如果一边是对象，另一边是数字，则尝试把对象转成数字**&lt;/p&gt;
+
+&lt;p&gt;根据第1条转换规则，先把等号右边的true转换为1，然后根据第2条转换规则，把’0′转换成0，再进行比较，结果返回false。&lt;/p&gt;
+
+&lt;p&gt;根据以上的转换规则，能得到很多匪夷所思的现象，这里就不一一列举了，感兴趣的亲们可以自己实验一下。&lt;/p&gt;
+
+&lt;p&gt;以上的规则对相等运算符还未阐述完全，比如以下的例子：&lt;/p&gt;
+
+&lt;pre&gt;if (new Number(0)==new Number(0)) alert(true); else alert(false);    //false
+if (new Number(0)==Number(0)) alert(true); else alert(false); //true&lt;/pre&gt;
+
+&lt;p&gt;且看&lt;/p&gt;
+
+&lt;h1 id=&quot;section-1&quot;&gt;相等运算(==)的比较规则&lt;/h1&gt;
+
+&lt;p&gt;相等运算符的比较规则是：&lt;/p&gt;
+
+&lt;p&gt;** 1. null和undefined相等**&lt;br /&gt;
+** 2. 不能把null和undefined转成其它值**&lt;br /&gt;
+** 3. 如果有一个是NaN，则==返回false，!=返回true**&lt;br /&gt;
+** 4. 如果两个都是对象，则比较引用值，相等返回true，否则返回false**&lt;/p&gt;
+
+&lt;p&gt;在上面最后一个例子中，new Number(0)返回的是一个对象，如果两边都是对象，则比较引用值，它们当然是不想等的，而Number(0)返回的是数字0，这样另一边的对象也会转换成数字0，结果它们是相等的。&lt;/p&gt;
+
+&lt;h1 id=&quot;section-2&quot;&gt; &amp;gt; , &amp;gt;= , &amp;lt; , &amp;lt;= 的运算规则&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;null , undefined , 布尔值转换成数字&lt;/li&gt;
+  &lt;li&gt;如果一方是数字，则会把另一方也转换成数字，再进行比较&lt;/li&gt;
+  &lt;li&gt;如果一方是NaN，则返回false&lt;/li&gt;
+  &lt;li&gt;如果两边都是字符串，则逐字比较unicode值&lt;/li&gt;
+  &lt;li&gt;如果一边是字符串，另一边是对象，或者两边都是对象，则把对象转换成字符串，再进行比较&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;详细的运算规则可见：&lt;a href=&quot;http://bclary.com/2004/11/07/#a-11.8.5&quot; target=&quot;_blank&quot;&gt;http://bclary.com/2004/11/07/#a-11.8.5&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Sun, 04 Jan 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/01/javascript%e7%9a%84if%e5%88%a4%e6%96%ad%e4%bb%a5%e5%8f%8a%e7%9b%b8%e7%ad%89%e8%bf%90%e7%ae%97%e7%9a%84%e7%b1%bb%e5%9e%8b%e8%bd%ac%e6%8d%a2%e8%a7%84%e5%88%99</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/01/javascript%e7%9a%84if%e5%88%a4%e6%96%ad%e4%bb%a5%e5%8f%8a%e7%9b%b8%e7%ad%89%e8%bf%90%e7%ae%97%e7%9a%84%e7%b1%bb%e5%9e%8b%e8%bd%ac%e6%8d%a2%e8%a7%84%e5%88%99</guid>
+        
+        <category>Javascript</category>
+        
+        
+        <category>javascript</category>
+        
+      </item>
+    
+      <item>
+        <title>思考HTML5</title>
+        <description>&lt;p&gt;HTML5已定稿，但我猜测，它仍然无法占领手机端。原先的想法都是比较乐观的，因为借鉴PC的模式，最后的胜利者是Web。如今HTML5的功能也很强大，前一阵做了一个h5页面调起手机摄像头的功能，让APP开发者直呼“要失业了”。这真有点哭笑不得，Web开发者和APP开发者看到对方都觉得自己要失业了，但未来真正怎么样，那还难说。&lt;/p&gt;
+
+&lt;p&gt;HTML5有它的优点——&lt;!--more--&gt;它更新迭代的更快、传播更好，但是它也有缺点——功能相之于APP的匮乏，性能和兼容性问题，以及它不容易留在用户的手机中。而从现实上看，现在的h5页面基本上扮演一个给APP导流的角色，它并不是宠儿。前一阵我们做了一个项目，把我们的业务放到公司的主APP上，我们选择内嵌h5页面这种轻量级的方案，其实它工作得很好，除了交互效果并不是非常流畅，以及需要主APP配合以实现和主APP的少量互动。但最后，这个项目跑了一阵，最后还是要把控制棒交到Native的手里，尽管有很多是基于非技术上的考虑，但是在别人的地盘上毕竟不是你做主。这让人对HTML5的信心遭受不小打击，那么HTML5应该怎么发展呢？&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.cyzone.cn/a/20141224/267488.html&quot;&gt;http://www.cyzone.cn/a/20141224/267488.html&lt;/a&gt; 这篇文章对HTML5做了一个定位，从目前的趋势看，谈改革或者颠覆还太早，HTML5需要一个生态圈，不管是微信还是其它的宿主，在这个生态圈里，我们要遵守游戏的规则，尽我们的职责。文章中总结的HTML5有三点好处：技术简单、传播力好、渗透力强，在它的优势下，我们可以明晰HTML5的职责——传播和渗透。&lt;/p&gt;
+
+&lt;p&gt;在传播上，HTML5页面可以在微信上疯一样地传播，例如前一阵子，一款由一名美术和一名程序使用1.5天开发完成的h5游戏《围住神经猫》，三天时间内游戏访问量超过一个亿，这是APP所无法达到的。在渗透上，HTML5可以非常低成本地放到任何APP中，例如在购物APP上下单，转到支付宝页面支付，而不需要安装支付宝的APP，在支付宝上可以跳到快的打车的页面打车，而不需要安装快的的APP。尽管HTML5在功能上受到一定的限制，但其传播性和渗透性是Native比不了的。&lt;/p&gt;
+
+&lt;p&gt;所以，让我们且放下改革或颠覆的想法，重新思考HTML5的功能和职责，让其最大限度发挥传播和渗透的作用，成为APP生态的血管。这是当下要做的。&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+</description>
+        <pubDate>Thu, 25 Dec 2014 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2014/12/%e6%80%9d%e8%80%83html5</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2014/12/%e6%80%9d%e8%80%83html5</guid>
+        
+        
+        <category>移动前端</category>
+        
+      </item>
+    
+      <item>
+        <title>java工程的overlay部署模式</title>
+        <description>&lt;p id=&quot;id-前端模块在java工程间的复用-背景&quot; style=&quot;color: #333333;&quot;&gt;
+  前端模块化后，一个模块可以在多个页面或者一个页面的多处被复用，提升了我们的开发效率，避免重复造轮子。而后，我们对复用性有了更高的要求，能不能让一个模块在多个工程（网站）间复用呢？我们的几个网站大多情况下使用的是同一套UI，我们希望尽量避免把相同的代码从这个网站拷贝到另一个网站，而是使其成为更加公共的模块，能够在不同的网站间复用。
+&lt;/p&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  maven的overlay模式能够将一个外部的war包部署到当前war包中，包括静态文件和class，最后的效果就是将两个war包合并起来了。例如我们的主模块使用了一个公共模块fe_common，按照如下方式配置overlay模式：
+&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在主模块的pom文件里加上依赖项 将依赖的模块加入dependency节点，并指明type值为war&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&amp;lt;dependency&amp;gt;
+   &amp;lt;groupId&amp;gt;com.company&amp;lt;/groupId&amp;gt;
+   &amp;lt;artifactId&amp;gt;fe_common&amp;lt;/artifactId&amp;gt;
+   &amp;lt;version&amp;gt;1.0.0-SNAPSHOT&amp;lt;/version&amp;gt;
+   &amp;lt;type&amp;gt;war&amp;lt;/type&amp;gt;
+ &amp;lt;/dependency&amp;gt;&lt;/pre&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  2. 添加一个plugin——maven-war-plugin，并在overlay中设置依赖的模块，以及包含的文件
+&lt;/p&gt;
+
+&lt;pre style=&quot;color: #333333;&quot;&gt;&amp;lt;plugin&amp;gt;
+   &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;
+   &amp;lt;artifactId&amp;gt;maven-war-plugin&amp;lt;/artifactId&amp;gt;
+   &amp;lt;version&amp;gt;2.1.1&amp;lt;/version&amp;gt;
+   &amp;lt;configuration&amp;gt;
+     &amp;lt;dependentWarIncludes&amp;gt;WEB-INF/**/*,static/**/*&amp;lt;/dependentWarIncludes&amp;gt;
+     &amp;lt;overlays&amp;gt;
+       &amp;lt;overlay&amp;gt;
+         &amp;lt;groupId&amp;gt;com.company&amp;lt;/groupId&amp;gt;
+         &amp;lt;artifactId&amp;gt;fe_common&amp;lt;/artifactId&amp;gt;
+       &amp;lt;/overlay&amp;gt;
+     &amp;lt;/overlays&amp;gt;
+   &amp;lt;/configuration&amp;gt;
+ &amp;lt;/plugin&amp;gt;&lt;/pre&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  经过这两步就设置好了，在编译的时候，主模块会自动下载fe_common模块的war包，在打包阶段将两个war包合并一块儿打包。
+&lt;/p&gt;
+
+&lt;h1 id=&quot;id-前端模块在java工程间的复用-注意和说明&quot; style=&quot;color: #333333;&quot;&gt;
+  注意和说明
+&lt;/h1&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  1. 由于overlay模式是将依赖包的文件合并到当前包中，所以要避免文件冲突，最好把依赖包的文件放在一个特定的目录中，如主模块的目录结构是/static/css , /static/js , /WEB-INF/views ，而fe_common的目录结构是/static/css/fe_common ,  /static/js/fe_common , /WEB-INF/views/fe_common。由于在本地开发的时候，IDE或者maven会在源代码处添加一些临时目录，而且不会删掉，所以应在.gitignore文件中添加上排除的目录
+&lt;/p&gt;
+
+&lt;pre class=&quot;lang:sh decode:true&quot;&gt;overlays
+src/main/webapp/**/fe_common&lt;/pre&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  2. overlay形式的依赖能够正确的编译打包和部署，如上所述，最后两个模块会合并到一个包里。如果是在本地调试阶段，不少IDE能够正确识别overlay的模块并引入依赖。但如果是用普通编辑器+命令行编译，则更改了fe_common后应该mvn install一下，这样对主模块执行mvn compile时才能正确取到包
+&lt;/p&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  3. 以nested方式运行jetty(mvn jetty:run)也可以识别出overlay模块，不过需要比较新的jetty plugin（最好升级到最新），但这种方式仍然不支持include ftl文件，猜测这和freemarker编译器的处理行为有关。解决方法是在maven的test-compile阶段把依赖的模块的ftl文件拷到本地，以使其正常运行。当然，这些拷过来的文件也不会被删掉，只要按照第1点所说的，在.gitignore文件中添加排除项就不会被加入到版本库中。
+&lt;/p&gt;
+
+&lt;pre class=&quot;lang:xhtml decode:true&quot;&gt;&amp;lt;plugin&amp;gt;
+  &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;
+  &amp;lt;artifactId&amp;gt;maven-dependency-plugin&amp;lt;/artifactId&amp;gt;
+  &amp;lt;version&amp;gt;2.10&amp;lt;/version&amp;gt;
+  &amp;lt;executions&amp;gt;
+    &amp;lt;execution&amp;gt;
+      &amp;lt;id&amp;gt;unpack&amp;lt;/id&amp;gt;
+      &amp;lt;phase&amp;gt;test-compile&amp;lt;/phase&amp;gt;
+      &amp;lt;goals&amp;gt;
+        &amp;lt;goal&amp;gt;unpack&amp;lt;/goal&amp;gt;
+      &amp;lt;/goals&amp;gt;
+      &amp;lt;configuration&amp;gt;
+        &amp;lt;artifactItems&amp;gt;
+          &amp;lt;artifactItem&amp;gt;
+            &amp;lt;groupId&amp;gt;com.company&amp;lt;/groupId&amp;gt;
+            &amp;lt;artifactId&amp;gt;fe_common&amp;lt;/artifactId&amp;gt;
+            &amp;lt;version&amp;gt;1.0.0-SNAPSHOT&amp;lt;/version&amp;gt;
+            &amp;lt;type&amp;gt;war&amp;lt;/type&amp;gt;
+            &amp;lt;overWrite&amp;gt;true&amp;lt;/overWrite&amp;gt;
+            &amp;lt;outputDirectory&amp;gt;${basedir}/src/main/webapp&amp;lt;/outputDirectory&amp;gt;
+            &amp;lt;includes&amp;gt;WEB-INF/views/**/*&amp;lt;/includes&amp;gt;
+          &amp;lt;/artifactItem&amp;gt;
+        &amp;lt;/artifactItems&amp;gt;
+      &amp;lt;/configuration&amp;gt;
+    &amp;lt;/execution&amp;gt;
+  &amp;lt;/executions&amp;gt;
+&amp;lt;/plugin&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;本文短地址： &lt;a href=&quot;http://blog.comiclee.com/?p=47&quot;&gt;http://blog.comiclee.com/?p=47&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;参考资料&lt;/p&gt;
+
+&lt;p style=&quot;color: #333333;&quot;&gt;
+  &lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;http://maven.apache.org/plugins/maven-war-plugin/overlays.html&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;http://maven.apache.org/plugins/maven-war-plugin/overlays.html&lt;/a&gt;&lt;/span&gt;&lt;/span&gt; &lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html#using-overlaid-wars&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html#using-overlaid-wars&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;/p&gt;
+</description>
+        <pubDate>Wed, 24 Dec 2014 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2014/12/java%e7%9a%84overlay%e6%a8%a1%e5%bc%8f</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2014/12/java%e7%9a%84overlay%e6%a8%a1%e5%bc%8f</guid>
+        
+        
+        <category>java</category>
+        
+        <category>前端工程化</category>
+        
+      </item>
+    
+      <item>
+        <title>【转】PHP程序员的技术成长规划</title>
+        <description>&lt;p&gt;PHP是当今最流行的web服务端语言，像facebook、百度都使用PHP作为网站主要语言。很多同学也有志于深入学习PHP，成为PHP专家，苦于不知道该了解哪些知识，处于迷茫之中。我作为前端工程师，想学习PHP，也不知该从哪儿下手，今天看到PHP的大牛@黑夜路人写了一篇PHP程序员的技术成长规划，写得挺实在的，忍不住拿来转发给大家，学习、共勉：&lt;/p&gt;
+
+&lt;h1 id=&quot;php&quot;&gt;第一阶段：基础阶段（基础PHP程序员）&lt;/h1&gt;
+
+&lt;p&gt;重点：把LNMP搞熟练（核心是安装配置基本操作）&lt;br /&gt;
+目标：能够完成基本的LNMP系统安装，简单配置维护；能够做基本的简单系统的PHP开发；能够在PHP中型系统中支持某个PHP功能模块的开发。&lt;br /&gt;
+时间：完成本阶段的时间因人而异，有的成长快半年一年就过了，成长慢的两三年也有。&lt;/p&gt;
+
+&lt;p&gt;1.Linux：&lt;br /&gt;
+基本命令、操作、启动、基本服务配置（包括rpm安装文件，各种服务配置等）；会写简单的shell脚本和awk/sed 脚本命令等。&lt;/p&gt;
+
+&lt;p&gt;2.Nginx：&lt;br /&gt;
+做到能够安装配置nginx+php，知道基本的nginx核心配置选项，知道 server/fastcgi_pass/access_log 等基础配置，目标是能够让nginx+php_fpm顺利工作。&lt;/p&gt;
+
+&lt;p&gt;3.MySQL：&lt;br /&gt;
+会自己搭建mysql，知道基本的mysql配置选项；知道innodb和myisam的区别，知道针对InnoDB和MyISAM两个引擎的不同配置选项；知道基本的两个引擎的差异和选择上面的区别；能够纯手工编译搭建一个MySQL数据库并且配置好编码等正常稳定运行；核心主旨是能够搭建一个可运行的MySQL数据库。&lt;/p&gt;
+
+&lt;p&gt;4.PHP：&lt;br /&gt;
+基本语法数组、字符串、数据库、XML、Socket、GD/ImageMgk图片处理等等；熟悉各种跟MySQL操作链接的api（mysql/mysqli/PDO)，知道各种编码问题的解决；知道常规熟练使用的PHP框架（ThinkPHP、Zendframework、Yii、Yaf等）；了解基本MVC的运行机制和为什么这么做，稍微知道不同的PHP框架之间的区别；能够快速学习一个MVC框架。能够知道开发工程中的文件目录组织，有基本的良好的代码结构和风格，能够完成小系统的开发和中型系统中某个模块的开发工作。&lt;/p&gt;
+
+&lt;p&gt;5.前端：&lt;br /&gt;
+如果条件时间允许，可以适当学习下 HTML/CSS/JS 等相关知识，知道什么web标准，div+css的web/wap页面模式，知道HTML5和HTML4的区别；了解一些基本的前端只是和JS框架（jQuery之类的）；了解一些基本的JavaScript编程知识；（本项不是必须项，如果有时间，稍微了解一下是可以的，不过不建议作为重点，除非个人有强烈兴趣）&lt;/p&gt;
+
+&lt;p&gt;6.系统设计：&lt;br /&gt;
+能够完成小型系统的基本设计，包括简单的数据库设计，能够完成基本的：浏览器 -&amp;gt; Nginx+PHP -&amp;gt; 数据库 架构的设计开发工作；能够支撑每天几十万到数百万流量网站的开发维护工作；&lt;/p&gt;
+
+&lt;h1 id=&quot;php-1&quot;&gt;第二阶段：提高阶段 （中级PHP程序员）&lt;/h1&gt;
+
+&lt;p&gt;为了尊重原作，就不全篇引用啦，大家移步看原文吧～&lt;/p&gt;
+
+&lt;p&gt;原文链接：&lt;a href=&quot;http://blog.csdn.net/heiyeshuwu/article/details/40098043&quot; target=&quot;_blank&quot;&gt;http://blog.csdn.net/heiyeshuwu/article/details/40098043&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Wed, 15 Oct 2014 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2014/10/%e3%80%90%e8%bd%ac%e3%80%91php%e7%a8%8b%e5%ba%8f%e5%91%98%e7%9a%84%e6%8a%80%e6%9c%af%e6%88%90%e9%95%bf%e8%a7%84%e5%88%92</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2014/10/%e3%80%90%e8%bd%ac%e3%80%91php%e7%a8%8b%e5%ba%8f%e5%91%98%e7%9a%84%e6%8a%80%e6%9c%af%e6%88%90%e9%95%bf%e8%a7%84%e5%88%92</guid>
+        
+        <category>php</category>
+        
+        
+        <category>php</category>
+        
+      </item>
+    
+      <item>
+        <title>优秀资源分享栏目</title>
+        <description>&lt;p&gt;一个优秀的前端，能够胜任全栈工作的前端，需要具备哪些能力呢？扎实的编程功底必不可少，眼界也很重要。了解业界的动态和方向，才能明白该往哪儿走，该怎么走。&lt;/p&gt;
+
+&lt;p&gt;拓宽眼界的有效做法就是多阅读最新的优秀的文章，技术文章在互联网上并不少，但良莠不齐，新同学往往看花了眼，不知该如何挑选。那么不妨看看大牛推荐的文章，我在右侧栏目的推荐资源中放置了《Weekly 一周优秀资源分享》的链接，是百度前端高工的每周阅读文章（高工的阅读量好大啊！），并且很贴心地划分成深阅读和新鲜货，能够帮助同学们筛选出有用的文章，不容错过哦～&lt;/p&gt;
+</description>
+        <pubDate>Mon, 13 Oct 2014 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2014/10/good-resource</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2014/10/good-resource</guid>
+        
+        
+        <category>未分类</category>
+        
+      </item>
+    
+  </channel>
+</rss>
