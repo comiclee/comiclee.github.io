@@ -1,0 +1,53 @@
+<p>Javascript的有些特性比较令人捉摸不透，例如以下的代码：</p>
+
+<pre>if ('0') alert(true); else alert(false);    //true
+if ('0'==true) alert(true); else alert(false);    //false</pre>
+
+<p>按照程序员的正常思维，经过了隐式的类型转换，这两个语句应该得到相同的结果才对。可事实却出人意料。而这一切，都是由Javascript在这两种场景下的不同转换规则造成的。<!--more--></p>
+
+<h1 id="boolean">Boolean语境下的类型转换</h1>
+
+<p>第一行语句if括号里的表达式预期得出一个Boolean值，于是系统自动调用Boolean方法，将’0′转换成Boolean值，该转换规则是将<strong>undefined</strong>、<strong>null</strong>、<strong>+0</strong>、<strong>-0</strong>、<strong>NaN</strong>、<strong>”（空字符串）</strong>返回false，其它的表达式返回true。’0′也返回true了。</p>
+
+<h1 id="section">相等运算(==)下的类型转换</h1>
+
+<p>第二行语句里有相等运算符，该运算符的转换规则则稍微有些复杂，这行语句得到的奇怪的结果也是因此而起。这里介绍一下相等运算符的转换规则：</p>
+
+<p>** 1. Boolean值转成数字，false =&gt; 0 , true =&gt; 1**<br />
+** 2. 如果一边是字符串，另一边是数字，则尝试把字符串转成数字**<br />
+** 3. 如果一边是对象，另一边是字符串，则尝试把对象转成字符串**<br />
+** 4. 如果一边是对象，另一边是数字，则尝试把对象转成数字**</p>
+
+<p>根据第1条转换规则，先把等号右边的true转换为1，然后根据第2条转换规则，把’0′转换成0，再进行比较，结果返回false。</p>
+
+<p>根据以上的转换规则，能得到很多匪夷所思的现象，这里就不一一列举了，感兴趣的亲们可以自己实验一下。</p>
+
+<p>以上的规则对相等运算符还未阐述完全，比如以下的例子：</p>
+
+<pre>if (new Number(0)==new Number(0)) alert(true); else alert(false);    //false
+if (new Number(0)==Number(0)) alert(true); else alert(false); //true</pre>
+
+<p>且看</p>
+
+<h1 id="section-1">相等运算(==)的比较规则</h1>
+
+<p>相等运算符的比较规则是：</p>
+
+<p>** 1. null和undefined相等**<br />
+** 2. 不能把null和undefined转成其它值**<br />
+** 3. 如果有一个是NaN，则==返回false，!=返回true**<br />
+** 4. 如果两个都是对象，则比较引用值，相等返回true，否则返回false**</p>
+
+<p>在上面最后一个例子中，new Number(0)返回的是一个对象，如果两边都是对象，则比较引用值，它们当然是不想等的，而Number(0)返回的是数字0，这样另一边的对象也会转换成数字0，结果它们是相等的。</p>
+
+<h1 id="section-2"> &gt; , &gt;= , &lt; , &lt;= 的运算规则</h1>
+
+<ol>
+  <li>null , undefined , 布尔值转换成数字</li>
+  <li>如果一方是数字，则会把另一方也转换成数字，再进行比较</li>
+  <li>如果一方是NaN，则返回false</li>
+  <li>如果两边都是字符串，则逐字比较unicode值</li>
+  <li>如果一边是字符串，另一边是对象，或者两边都是对象，则把对象转换成字符串，再进行比较</li>
+</ol>
+
+<p>详细的运算规则可见：<a href="http://bclary.com/2004/11/07/#a-11.8.5" target="_blank">http://bclary.com/2004/11/07/#a-11.8.5</a></p>
