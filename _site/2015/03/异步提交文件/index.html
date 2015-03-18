@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>异步提交文件</title>
+  <meta name="description" content="异步提交表单对于现代AJAX程序来说是一件轻而易举的事，如果使用jQuery等库的话更无需考虑浏览器的差异，简单的一句$.post 搞定，但如果要上传文件呢？jQuery的异步请求方法并没有提供异步提交文件的功能，这个时候我们可以使用jQuery的Form插件（http://malsup.com/jquery/f...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.comiclee.com/2015/03/%e5%bc%82%e6%ad%a5%e6%8f%90%e4%ba%a4%e6%96%87%e4%bb%b6">
+  <link rel="alternate" type="application/rss+xml" title="前端栗仔 | Thinking in Front-end" href="http://blog.comiclee.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">前端栗仔 | Thinking in Front-end</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/about/index.html">关于我</a>
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">异步提交文件</h1>
+    <p class="post-meta">Mar 18, 2015 • comiclee</p>
+  </header>
+
+  <article class="post-content">
+    <p>异步提交表单对于现代AJAX程序来说是一件轻而易举的事，如果使用jQuery等库的话更无需考虑浏览器的差异，简单的一句<span class="lang:js decode:true  crayon-inline ">$.post</span> 搞定，但如果要上传文件呢？jQuery的异步请求方法并没有提供异步提交文件的功能，这个时候我们可以使用jQuery的Form插件（<a href="http://malsup.com/jquery/form/" target="_blank">http://malsup.com/jquery/form/</a>）来完成这个功能，或者我们可以搞清楚原理，自己实现一个。<!--more--></p>
+
+<h1 id="jqueryform">使用jQuery的form插件实现异步提交文件</h1>
+
+<p>使用form插件实现异步提交表单非常简单，只需要针对form表单执行ajaxForm初始化即可</p>
+
+<pre class="lang:xhtml decode:true">&lt;form id="myForm" action="/upload" method="post" enctype="multipart/form-data"&gt;
+  描述：&lt;input name="desc"&gt;
+  文件：&lt;input name="file" type="file"&gt;
+  &lt;button id="submit" type="submit"&gt;提交&lt;/button&gt;
+&lt;/form&gt;
+&lt;script&gt;
+$('#myForm').ajaxForm(function() { 
+  alert("提交成功"); 
+}); 
+&lt;/script&gt;</pre>
+
+<h1 id="xmlhttprequest2"> XMLHttpRequest2对异步提交表单的支持</h1>
+
+<p>现代的浏览器对异步请求提供了功能更强大的支持，这就是我们要隆重介绍的XMLHttpRequest2。顺便提一句，XMLHttpRequest2并不属于HTML5，它是个新的、功能强大的API。我们可以构造XMLHttpRequest2的FormData对象并放进去我们想要的文本、文件等。</p>
+
+<pre class="lang:js decode:true">$('#myForm').on('submit', function() {
+    var formElem = this;
+    var formData = new FormData();
+    $('#myForm').find('input').each(function() {
+      if (this.type=='file' &amp;&amp; this.files.length&gt;0) {
+        for (var i= 0; i&lt;this.files.length; i++) {
+          formData.append(this.name, this.files.item(i));
+        }
+      } else {
+        formData.append(this.name, this.value);
+      }
+    });
+
+    $.ajax({
+      url: formElem.action,
+      data: formData,
+      processData: false,
+      contentType: false,
+      type: formElem.method,
+      success: function(data){
+        alert(data);
+      }
+    });
+
+    return false;
+  });</pre>
+
+<h1 id="section"> 低级浏览器下的解决方法</h1>
+
+<p>XMLHttpRequest2只有IE10+才支持，那么对于低版本的浏览器如何实现呢？我们可以构建一个虚拟表单，并提交到iframe里的方式。</p>
+
+<pre class="lang:js decode:true">$('#myForm').on('submit',function() {
+    var jQorigForm = $(this);
+
+    // 创建一个用于存放结果的iframe
+    var iframeName = 'form-target-'+new Date().valueOf();
+    var jQiframe = $('&lt;iframe id="'+iframeName+'" name="'+iframeName+'" style="position:absolute;left:-9999px;top:-9999px"&gt;&lt;/iframe&gt;')
+      .appendTo('body');
+
+    // 创建一个临时表单，令其提交到iframe中
+    var jQform = jQorigForm.clone()
+      .html('')
+      .appendTo('body')
+      .attr('target',iframeName)
+      .css({position:'absolute',left:'-9999px',top:'-9999px'});
+
+    // 拷贝输入框到临时表单
+    jQorigForm.find('input').each(function() {
+      var jQinput = $(this);
+      var jQnewInput = jQinput.clone();
+      if (this.type=='file') { // 由于FileInput不能赋值，所以只能交换两个form的元素的权宜之计
+        jQinput.before(jQnewInput);
+        jQinput.appendTo(jQform);
+      } else {
+        jQnewInput.appendTo(jQform);
+      }
+    });
+
+    // 提交临时表单
+    jQform.submit().remove();
+
+    // 设个定时从iframe中读取结果
+    var interval = setInterval(function() {
+      var content = jQiframe.contents().find('body').html();
+      if (content) {
+        alert(content);
+        jQiframe.remove();
+        clearInterval(interval);
+      }
+    }, 400);
+
+    return false;
+  });</pre>
+
+<p>本文固定链接：<a href="http://blog.comiclee.com/?p=208">http://blog.comiclee.com/?p=208</a></p>
+
+<h1 id="section-1">参考资料</h1>
+
+<ul>
+  <li><a href="http://www.html5rocks.com/zh/tutorials/file/xhr2/" target="_blank">http://www.html5rocks.com/zh/tutorials/file/xhr2/</a></li>
+  <li><a href="http://www.zhangxinxu.com/wordpress/2013/10/understand-domstring-document-formdata-blob-file-arraybuffer/" target="_blank">http://www.zhangxinxu.com/wordpress/2013/10/understand-domstring-document-formdata-blob-file-arraybuffer/</a></li>
+  <li><a href="http://www.cnblogs.com/fengwei/archive/2012/06/22/2558567.html" target="_blank">http://www.cnblogs.com/fengwei/archive/2012/06/22/2558567.html</a></li>
+</ul>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">前端栗仔 | Thinking in Front-end</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>前端栗仔 | Thinking in Front-end</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Thinking in Front-end</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
