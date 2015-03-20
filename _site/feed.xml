@@ -5,9 +5,443 @@
     <description>Thinking in Front-end</description>
     <link>http://blog.comiclee.com/</link>
     <atom:link href="http://blog.comiclee.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 18 Mar 2015 18:17:36 +0800</pubDate>
-    <lastBuildDate>Wed, 18 Mar 2015 18:17:36 +0800</lastBuildDate>
+    <pubDate>Fri, 20 Mar 2015 16:01:20 +0800</pubDate>
+    <lastBuildDate>Fri, 20 Mar 2015 16:01:20 +0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Javascript的严格模式</title>
+        <description>&lt;p&gt;ECMAScript5定义了一种严格模式的语法，它禁用了一些不够安全的用法，同时，对一些原本静默失败的异常情况会抛出错误。使用严格模式可以帮助我们避免因为失误写出不安全的代码，我们应该尽量使用它。&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;section&quot;&gt;启用严格模式&lt;/h1&gt;
+
+&lt;p&gt;使用&lt;span class=&quot;lang:js decode:true  crayon-inline&quot;&gt;“use strict”;&lt;/span&gt;  或者 &lt;span class=&quot;lang:js decode:true  crayon-inline &quot;&gt;‘use strict’;&lt;/span&gt;  可以指定特定的代码使用严格模式，如我们可以指定对单个函数启用严格模式。如果我们在全局使用严格模式，那么会影响到所有的代码，这可能导致一些旧代码执行出错，所以我们应该把严格模式的代码控制在我们所掌握的范围内。&lt;/p&gt;
+
+&lt;p&gt;要注意的是，&lt;span class=&quot;lang:js decode:true  crayon-inline&quot;&gt;“use strict”;&lt;/span&gt; 应该放在代码的顶端才能生效，放在中间是不生效的。请看下面的例子：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true&quot;&gt;// OK, non-strict mode
+(function foo() {
+  arguments = 10;
+  &quot;use strict&quot;;
+})();
+ 
+// SyntaxError, strict-mode
+(function foo() {
+  &quot;use strict&quot;;
+  arguments = 10;
+})();&lt;/pre&gt;
+
+&lt;p&gt;当然，这个顶端指的是可执行代码之前，倒不必非是第一行代码：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;// also strict mode
+ 
+&quot;use restrict&quot;;
+&quot;use strict&quot;;
+ 
+a = 10; // ReferenceError&lt;/pre&gt;
+
+&lt;h1 id=&quot;section-1&quot;&gt; 严格模式的作用域&lt;/h1&gt;
+
+&lt;p&gt;严格模式的作用域延伸到其所有内部代码，定义了严格模式的代码，其内部嵌套的代码都处于严格模式中：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;// define strict mode in the global context,
+// i.e. for the whole program
+&quot;use strict&quot;;
+ 
+(function foo() {
+  // strictness is &quot;inherited&quot; from
+  // the global context
+  eval = 10; // SyntaxError
+  (function bar() {
+    // the same - from the global context
+    arguments = 10; // SyntaxError
+  })();
+})();&lt;/pre&gt;
+
+&lt;p&gt;需要明确一点是，严格模式作用于词法上下文（静态上下文）而非运行时环境，即在定义的时候其作用域就已经确定了，而非运行时才确定，这一点和闭包一样：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;// globally use a non-strict mode
+ 
+var foo = (function () {
+  &quot;use strict&quot;;
+  return function () {
+    alert(this);
+  };
+})();
+ 
+function bar() {
+  alert(this);
+}
+ 
+// for both functions, a caller is the global context
+ 
+// but &quot;foo&quot; is evaluated in the strict mode
+foo(); // undefined
+ 
+// meanwhile &quot;bar&quot; is not
+bar(); // object&lt;/pre&gt;
+
+&lt;p&gt;另外提及一点，使用Function构造函数创造的函数不会继承定义时的环境的严格模式：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+var f = Function(&quot;eval&quot;, &quot;arguments&quot;, &quot; \
+  eval = 10; arguments = 20; \
+  with ({a: 30}) { \
+    alert(a + eval + arguments); \
+  }&quot;
+);
+ 
+f(); // OK, 60&lt;/pre&gt;
+
+&lt;p&gt;除非把 &lt;span class=&quot;lang:js decode:true  crayon-inline&quot;&gt;“use strict”;&lt;/span&gt; 放在函数定义中：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;// non-strict globally
+ 
+var f = Function(&quot;eval&quot;, &quot;&#39;use strict&#39;; alert(eval);&quot;); // SyntaxError&lt;/pre&gt;
+
+&lt;h1 id=&quot;section-2&quot;&gt; 严格模式下的代码要求和限制&lt;/h1&gt;
+
+&lt;p&gt;我们看看在严格模式下有哪些代码的要求和限制&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;为未来预留的关键字&lt;/h2&gt;
+
+&lt;p&gt;这些关键字是为未来预留的，所以不能用于变量名和函数名中：&lt;em&gt;implements&lt;/em&gt;, &lt;em&gt;interface&lt;/em&gt;, &lt;em&gt;let&lt;/em&gt;, &lt;em&gt;package&lt;/em&gt;, &lt;em&gt;private&lt;/em&gt;, &lt;em&gt;protected&lt;/em&gt;, &lt;em&gt;public&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;yield&lt;/em&gt; 。&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+var let = 10; // SyntaxError&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt; 不支持八进制字面量&lt;/h2&gt;
+
+&lt;p&gt;在非严格模式中，数字第一位是0会被解析成八进制数字：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;var x = 010; // octal number
+print(x); // 8 - in octal radix&lt;/pre&gt;
+
+&lt;p&gt;这样的做法仅仅是为了向后兼容，但在严格模式下，这样的写法不被支持了，这么写将会报错：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+var x = 010; // SyntaxError&lt;/pre&gt;
+
+&lt;p&gt;另外提一点，在ES3中使用 &lt;span class=&quot;lang:js decode:true  crayon-inline &quot;&gt;parseInt(’010′)&lt;/span&gt; 会默认转成八进制数字，不过这在ES5中已经改为转换成十进制数字了，不管有没有严格模式。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt; 给未声明的变量赋值&lt;/h2&gt;
+
+&lt;p&gt;众所周知，给未声明的变量赋值会自动创建一个全局作用域的变量，这是一种非常不安全的行为：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;// non-strict mode
+ 
+(function foo() {
+  // local vars
+  var x = y = 20;
+})();
+ 
+// unfortunately, &quot;y&quot; wasn&#39;t local
+// for &quot;foo&quot; function
+alert(y); // 20
+alert(x); // &quot;x&quot; is not defined&lt;/pre&gt;
+
+&lt;p&gt;但在严格模式下，这么做将会报错：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+a = 10; // ReferenceError
+ 
+var x = y = 20; // also a ReferenceError&lt;/pre&gt;
+
+&lt;h2 id=&quot;eval-arguments&quot;&gt;eval 和 arguments&lt;/h2&gt;
+
+&lt;p&gt;在严格模式下，eval和arguments被当作关键词。它们不能用作变量名、函数名、函数的参数名，不能给它们赋值，不能进行自增、自减操作：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true&quot;&gt;&quot;use strict&quot;;
+ 
+// SyntaxError in both cases
+var arguments;
+var eval;
+ 
+// also SyntaxError
+function eval() {}
+var foo = function arguments() {};
+
+// SyntaxError
+function foo(eval, arguments) {}
+
+(function (x) {
+  alert(arguments[0]); // 30
+  arguments = 40; // TypeError
+})(30);
+
+// SyntaxError
+++eval;
+arguments--;
+
+try {
+  throw Error(&quot;...&quot;);
+} catch (arguments) {} // SyntaxError, the same for &quot;eval&quot; name&lt;/pre&gt;
+
+&lt;p&gt;它们可以作为对象的属性名，不过不能作为函数的属性名&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true&quot;&gt;&quot;use strict&quot;;
+ 
+// OK
+var foo = {
+  eval: 10,
+  arguments: 20
+};
+ 
+// OK
+foo.eval = 10;
+foo.arguments = 20;&lt;/pre&gt;
+
+&lt;pre class=&quot;lang:js decode:true&quot;&gt;&quot;use strict&quot;;
+ 
+function foo() {
+  alert(foo.arguments); // SyntaxError
+  alert(foo.caller); // SyntaxError
+}
+ 
+foo();&lt;/pre&gt;
+
+&lt;p&gt;arguments和函数参数之间的绑定将会断开，即更改一个不会影响到另一个&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+(function foo(x) {
+ 
+  alert(arguments[0]); // 10
+  arguments[0] = 20;
+ 
+  alert(x); // 10, but not 20
+ 
+  x = 30;
+  alert(arguments[0]); // 20, but not 30
+ 
+})(10);&lt;/pre&gt;
+
+&lt;p&gt;eval执行在一个沙盒环境中，在其中声明的变量不会影响到全局的作用域，在eval结束后，沙盒环境也相应地消失。&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+eval(&quot;var x = 10; alert(x);&quot;); // 10
+alert(x); // &quot;x&quot; is not defined&lt;/pre&gt;
+
+&lt;p&gt;不过我们可以通过 indirect eval 来让eval创建全局变量。&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+(&quot;indirect&quot;, eval)(&quot;var x = 10; alert(x);&quot;); // 10
+alert(x); // 10&lt;/pre&gt;
+
+&lt;h2 id=&quot;callee--caller&quot;&gt;callee 和 caller&lt;/h2&gt;
+
+&lt;p&gt;在严格模式下，callee和caller都被禁止访问。我们无法使用arguments.callee来获取匿名函数了&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+(function foo(bar) {
+  if (!bar) {
+    arguments.callee(true); // SyntaxError
+    foo(true); // OK
+  }
+})();&lt;/pre&gt;
+
+&lt;p&gt;这是处于安全性的考虑，如果没有这样的限制，被调用函数有权限修改调用方的值，比如：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;// non-strict mode
+ 
+function foo(x, y) {
+  alert(x); // 10
+  bar();
+  alert(x); // 100
+}
+ 
+function bar() {
+  console.dir(bar.caller.arguments); // 10, 20
+  bar.caller.arguments[0] = 100;
+}
+ 
+foo(10, 20);&lt;/pre&gt;
+
+&lt;p&gt;禁止访问arguments.callee后会引发一些不便，比如在非全局作用域下，用Function创建函数，且这个函数存在递归调用的时候：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;(function () {
+   
+  // outer name is not available,
+  // regardless strictness
+  var foo = Function(&quot;alert(foo);&#39;&quot;);
+  foo(); // &quot;foo&quot; is not defined (no such name in the global context)
+   
+  // error in strict mode for arguments.callee
+  Function(&quot;&#39;use strict; alert(arguments.callee);&#39;&quot;)(); // TypeError
+   
+  // OK in non-strict for arguments.callee
+  Function(&quot;alert(arguments.callee);&#39;&quot;)(); // OK, function
+ 
+})();&lt;/pre&gt;
+
+&lt;p&gt;有一些方法可以绕过去，这里就不展开了，可以见&lt;a href=&quot;http://dmitrysoshnikov.com/ecmascript/es5-chapter-2-strict-mode/#codecalleecode-and-codecallercode-restrictions&quot; target=&quot;_blank&quot;&gt;http://dmitrysoshnikov.com/ecmascript/es5-chapter-2-strict-mode/#codecalleecode-and-codecallercode-restrictions&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;重复命名&lt;/h2&gt;
+
+&lt;p&gt;重复命名将会报错，包括属性名和参数名&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+// SyntaxError
+var foo = {
+  x: 10,
+  x: 10
+};
+
+// SyntaxError
+function foo(x, x) {}&lt;/pre&gt;
+
+&lt;p&gt;get和set方法在严格或非严格的模式下，都不能重名&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;// strict or non-strict mode
+ 
+// SyntaxError
+var foo = {
+  get x() {},
+  get x() {}
+};
+ 
+// the same with setters
+// SyntaxError
+var bar = {
+  set y(value) {},
+  set y(value) {}
+};
+
+// SyntaxError
+var foo = {
+  x: 10,
+  get x() {}
+};&lt;/pre&gt;
+
+&lt;h2 id=&quot;delete&quot;&gt; delete操作&lt;/h2&gt;
+
+&lt;p&gt;实际上，变量、函数参数、函数都是无法被删除的，除非是在eval环境中，不过无法删除并不会报错。而在严格模式下，删除变量、函数参数、函数都会报错，包括在eval环境中删除也会报错。&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+var foo = {};
+ 
+function bar(x) {
+  delete x; // SyntaxError
+}
+ 
+bar(10);  // SyntaxError
+ 
+delete foo; // SyntaxError
+delete bar; // SyntaxError
+ 
+Object.defineProperty(foo, &quot;baz&quot;, {
+  value: 10,
+  configurable: false
+});
+ 
+// but when delete a
+// property, then TypeError
+ 
+delete foo.baz; // TypeError
+ 
+// SyntaxError
+eval(&quot;var x = 10; delete x;&quot;); // in non-strict is OK&lt;/pre&gt;
+
+&lt;h2 id=&quot;with&quot;&gt;with语句&lt;/h2&gt;
+
+&lt;p&gt;在严格模式下，不允许使用with语句&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+// SyntaxError
+with ({a: 10}) {
+  alert(a);
+}&lt;/pre&gt;
+
+&lt;h2 id=&quot;this&quot;&gt;this值&lt;/h2&gt;
+
+&lt;p&gt;在严格模式中，this值不再自动转换成一个对象， null和undefined的this值不再转换成全局对象，基本类型的值不再转换成包装对象，通过 &lt;span class=&quot;lang:js decode:true  crayon-inline &quot;&gt;Function.prototype.apply&lt;/span&gt; 和 &lt;span class=&quot;lang:js decode:true  crayon-inline &quot;&gt;Function.prototype.call&lt;/span&gt; 传入的this值不再转换成对象：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+// undefined &quot;this&quot; value,
+// but not the global object
+function foo() {
+  alert(this); // undefined
+}
+ 
+foo(); // undefined
+ 
+// &quot;this&quot; is a primitive
+Number.prototype.test = function () {
+  alert(typeof this); // number
+};
+ 
+1..test(); // number
+ 
+foo.call(null); // null
+foo.apply(undefined); // undefined&lt;/pre&gt;
+
+&lt;p&gt;this被设置为undefined可以避免忘记使用new 来调用构造函数&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;// non-strict
+function A(x) {
+  this.x = x;
+}
+ 
+var a = A(10); // forget &quot;new&quot; keyword
+ 
+// as a result &quot;a&quot; is undefined,
+// because exactly this value is returned
+// implicitly from the A function
+ 
+alert(a); // undefined
+ 
+// and again created &quot;x&quot; property
+// of the global object, because &quot;this&quot;
+// is coerced to global object in the
+// non-strict in such case
+ 
+alert(x); // 10&lt;/pre&gt;
+
+&lt;p&gt;在严格模式下会抛出异常&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;&quot;use strict&quot;;
+ 
+function A(x) {
+  this.x = x;
+}
+ 
+// forget &quot;new&quot; keyword,
+// error, because undefined.x = 10
+ 
+var a = A(10);
+ 
+var b = new A(10); // OK&lt;/pre&gt;
+
+&lt;h1 id=&quot;section-7&quot;&gt;总结&lt;/h1&gt;
+
+&lt;p&gt;可以看到，严格模式限制了Javascript现有的一些有风险的做法，减少了我们出错的几率。同时一些将来会废弃的用法，在严格模式中也禁用了，所以启用严格模式也能避免产生一些历史遗留代码。IE10+才支持严格模式，在低版本下会被忽略，而firefox、chrome和safari浏览器在比较早的版本就支持了，包括移动版。&lt;/p&gt;
+
+&lt;p&gt;本文固定链接：&lt;a href=&quot;http://blog.comiclee.com/?p=218&quot;&gt;http://blog.comiclee.com/?p=218&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;section-8&quot;&gt;参考资料&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://dmitrysoshnikov.com/ecmascript/es5-chapter-2-strict-mode/&quot; target=&quot;_blank&quot;&gt;http://dmitrysoshnikov.com/ecmascript/es5-chapter-2-strict-mode/&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Fri, 20 Mar 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/03/javascript%e7%9a%84%e4%b8%a5%e6%a0%bc%e6%a8%a1%e5%bc%8f</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/03/javascript%e7%9a%84%e4%b8%a5%e6%a0%bc%e6%a8%a1%e5%bc%8f</guid>
+        
+        <category>Javascript</category>
+        
+        
+        <category>javascript</category>
+        
+      </item>
     
       <item>
         <title>异步提交文件</title>
@@ -1281,51 +1715,6 @@ src/main/webapp/**/fe_common&lt;/pre&gt;
         <category>java</category>
         
         <category>前端工程化</category>
-        
-      </item>
-    
-      <item>
-        <title>【转】PHP程序员的技术成长规划</title>
-        <description>&lt;p&gt;PHP是当今最流行的web服务端语言，像facebook、百度都使用PHP作为网站主要语言。很多同学也有志于深入学习PHP，成为PHP专家，苦于不知道该了解哪些知识，处于迷茫之中。我作为前端工程师，想学习PHP，也不知该从哪儿下手，今天看到PHP的大牛@黑夜路人写了一篇PHP程序员的技术成长规划，写得挺实在的，忍不住拿来转发给大家，学习、共勉：&lt;/p&gt;
-
-&lt;h1 id=&quot;php&quot;&gt;第一阶段：基础阶段（基础PHP程序员）&lt;/h1&gt;
-
-&lt;p&gt;重点：把LNMP搞熟练（核心是安装配置基本操作）&lt;br /&gt;
-目标：能够完成基本的LNMP系统安装，简单配置维护；能够做基本的简单系统的PHP开发；能够在PHP中型系统中支持某个PHP功能模块的开发。&lt;br /&gt;
-时间：完成本阶段的时间因人而异，有的成长快半年一年就过了，成长慢的两三年也有。&lt;/p&gt;
-
-&lt;p&gt;1.Linux：&lt;br /&gt;
-基本命令、操作、启动、基本服务配置（包括rpm安装文件，各种服务配置等）；会写简单的shell脚本和awk/sed 脚本命令等。&lt;/p&gt;
-
-&lt;p&gt;2.Nginx：&lt;br /&gt;
-做到能够安装配置nginx+php，知道基本的nginx核心配置选项，知道 server/fastcgi_pass/access_log 等基础配置，目标是能够让nginx+php_fpm顺利工作。&lt;/p&gt;
-
-&lt;p&gt;3.MySQL：&lt;br /&gt;
-会自己搭建mysql，知道基本的mysql配置选项；知道innodb和myisam的区别，知道针对InnoDB和MyISAM两个引擎的不同配置选项；知道基本的两个引擎的差异和选择上面的区别；能够纯手工编译搭建一个MySQL数据库并且配置好编码等正常稳定运行；核心主旨是能够搭建一个可运行的MySQL数据库。&lt;/p&gt;
-
-&lt;p&gt;4.PHP：&lt;br /&gt;
-基本语法数组、字符串、数据库、XML、Socket、GD/ImageMgk图片处理等等；熟悉各种跟MySQL操作链接的api（mysql/mysqli/PDO)，知道各种编码问题的解决；知道常规熟练使用的PHP框架（ThinkPHP、Zendframework、Yii、Yaf等）；了解基本MVC的运行机制和为什么这么做，稍微知道不同的PHP框架之间的区别；能够快速学习一个MVC框架。能够知道开发工程中的文件目录组织，有基本的良好的代码结构和风格，能够完成小系统的开发和中型系统中某个模块的开发工作。&lt;/p&gt;
-
-&lt;p&gt;5.前端：&lt;br /&gt;
-如果条件时间允许，可以适当学习下 HTML/CSS/JS 等相关知识，知道什么web标准，div+css的web/wap页面模式，知道HTML5和HTML4的区别；了解一些基本的前端只是和JS框架（jQuery之类的）；了解一些基本的JavaScript编程知识；（本项不是必须项，如果有时间，稍微了解一下是可以的，不过不建议作为重点，除非个人有强烈兴趣）&lt;/p&gt;
-
-&lt;p&gt;6.系统设计：&lt;br /&gt;
-能够完成小型系统的基本设计，包括简单的数据库设计，能够完成基本的：浏览器 -&amp;gt; Nginx+PHP -&amp;gt; 数据库 架构的设计开发工作；能够支撑每天几十万到数百万流量网站的开发维护工作；&lt;/p&gt;
-
-&lt;h1 id=&quot;php-1&quot;&gt;第二阶段：提高阶段 （中级PHP程序员）&lt;/h1&gt;
-
-&lt;p&gt;为了尊重原作，就不全篇引用啦，大家移步看原文吧～&lt;/p&gt;
-
-&lt;p&gt;原文链接：&lt;a href=&quot;http://blog.csdn.net/heiyeshuwu/article/details/40098043&quot; target=&quot;_blank&quot;&gt;http://blog.csdn.net/heiyeshuwu/article/details/40098043&lt;/a&gt;&lt;/p&gt;
-</description>
-        <pubDate>Wed, 15 Oct 2014 00:00:00 +0800</pubDate>
-        <link>http://blog.comiclee.com/2014/10/%e3%80%90%e8%bd%ac%e3%80%91php%e7%a8%8b%e5%ba%8f%e5%91%98%e7%9a%84%e6%8a%80%e6%9c%af%e6%88%90%e9%95%bf%e8%a7%84%e5%88%92</link>
-        <guid isPermaLink="true">http://blog.comiclee.com/2014/10/%e3%80%90%e8%bd%ac%e3%80%91php%e7%a8%8b%e5%ba%8f%e5%91%98%e7%9a%84%e6%8a%80%e6%9c%af%e6%88%90%e9%95%bf%e8%a7%84%e5%88%92</guid>
-        
-        <category>php</category>
-        
-        
-        <category>php</category>
         
       </item>
     
