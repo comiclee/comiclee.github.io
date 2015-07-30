@@ -14,7 +14,7 @@ ECMAScript5定义了一种严格模式的语法，它禁用了一些不够安全
 
 # 启用严格模式
 
-使用<span class="lang:js decode:true  crayon-inline">&#8220;use strict&#8221;;</span>  或者 <span class="lang:js decode:true  crayon-inline ">&#8216;use strict&#8217;;</span>  可以指定特定的代码使用严格模式，如我们可以指定对单个函数启用严格模式。如果我们在全局使用严格模式，那么会影响到所有的代码，这可能导致一些旧代码执行出错，所以我们应该把严格模式的代码控制在我们所掌握的范围内。
+使用<span class="lang:js decode:true  crayon-inline">&#8220;use strict&#8221;;</span>  或者 <span class="lang:js decode:true  crayon-inline ">&#8216;use strict';</span>  可以指定特定的代码使用严格模式，如我们可以指定对单个函数启用严格模式。如果我们在全局使用严格模式，那么会影响到所有的代码，这可能导致一些旧代码执行出错，所以我们应该把严格模式的代码控制在我们所掌握的范围内。
 
 要注意的是，<span class="lang:js decode:true  crayon-inline">&#8220;use strict&#8221;;</span> 应该放在代码的顶端才能生效，放在中间是不生效的。请看下面的例子：
 
@@ -124,7 +124,7 @@ print(x); // 8 - in octal radix</pre>
  
 var x = 010; // SyntaxError</pre>
 
-另外提一点，在ES3中使用 <span class="lang:js decode:true  crayon-inline ">parseInt(&#8217;010&#8242;)</span> 会默认转成八进制数字，不过这在ES5中已经改为转换成十进制数字了，不管有没有严格模式。
+另外提一点，在ES3中使用 <span class="lang:js decode:true  crayon-inline ">parseInt(&#8216;010&#8242;)</span> 会默认转成八进制数字，不过这在ES5中已经改为转换成十进制数字了，不管有没有严格模式。
 
 ##  给未声明的变量赋值
 
