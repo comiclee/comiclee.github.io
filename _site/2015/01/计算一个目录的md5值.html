@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>关于我</title>
-  <meta name="description" content="Thinking in Front-end">
+  <title>计算一个目录的md5值</title>
+  <meta name="description" content="使用Linux的md5sum命令可以计算出一个文件的md5值，这可以用于判断文件是否经过更改，使用方法如下：">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://blog.comiclee.com/about/">
+  <link rel="canonical" href="http://blog.comiclee.com/2015/01/%e8%ae%a1%e7%ae%97%e4%b8%80%e4%b8%aa%e7%9b%ae%e5%bd%95%e7%9a%84md5%e5%80%bc">
   <link rel="alternate" type="application/rss+xml" title="前端栗仔 | Thinking in Front-end" href="http://blog.comiclee.com/feed.xml" />
 </head>
 
@@ -61,12 +61,39 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">关于我</h1>
+    <h1 class="post-title">计算一个目录的md5值</h1>
+    <p class="post-meta">Jan 9, 2015 • comiclee</p>
   </header>
 
   <article class="post-content">
-    <p>I am <a target="_blank" href="http://weibo.com/comiclee00">栗仔comiclee</a><br />
-<a target="_blank" href="http://weibo.com/comiclee00"><img class="size-full wp-image-117" src="http://blog.comiclee.com/wp-content/uploads/2015/01/1.jpg" alt="I am 栗仔comiclee" width="180" height="180" /></a></p>
+    <p>使用Linux的md5sum命令可以计算出一个文件的md5值，这可以用于判断文件是否经过更改，使用方法如下：</p>
+
+<pre>md5sum filename</pre>
+
+<p>但md5sum命令无法作用于一个目录，那如何计算一个目录的md5呢？有一个思路是计算目录内所有文件的md5，然后再进行一次的md5计算。我们可以遍历目录，对所有文件进行计算：<!--more--></p>
+
+<pre>sum=''
+process() {
+  local dir=$1
+  for file in `ls $dir` ; do
+    local path=$dir/$file
+    if [ -d $path ] ; then
+      process $path 
+    elif [ -f $path ] ; then
+      sum=$sum$(md5sum $path)
+    fi
+  done
+}
+process pathname
+echo $sum | md5sum</pre>
+
+<p>其实利用Linux的find命令，能够更方便快捷地达成目的</p>
+
+<pre>find pathname -type f | xargs md5sum | md5sum</pre>
+
+<p>当然，用这两种方法计算的md5是不一样的，要保证使用同一个md5算法，以免出问题。</p>
+
+<p> </p>
 
   </article>
 

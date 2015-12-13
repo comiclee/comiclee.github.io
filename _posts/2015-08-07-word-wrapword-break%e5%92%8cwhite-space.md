@@ -3,6 +3,8 @@ title: word-wrap,word-break和white-space
 author: comiclee
 layout: post
 permalink: /2015/08/word-wrapword-break%e5%92%8cwhite-space
+duoshuo_thread_id:
+  - 1286630914637430802
 categories:
   - css
 ---

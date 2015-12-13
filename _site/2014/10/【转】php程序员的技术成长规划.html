@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>【转】PHP程序员的技术成长规划</title>
+  <meta name="description" content="PHP是当今最流行的web服务端语言，像facebook、百度都使用PHP作为网站主要语言。很多同学也有志于深入学习PHP，成为PHP专家，苦于不知道该了解哪些知识，处于迷茫之中。我作为前端工程师，想学习PHP，也不知该从哪儿下手，今天看到PHP的大牛@黑夜路人写了一篇PHP程序员的技术成长规划，写得挺实在的，忍...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.comiclee.com/2014/10/%e3%80%90%e8%bd%ac%e3%80%91php%e7%a8%8b%e5%ba%8f%e5%91%98%e7%9a%84%e6%8a%80%e6%9c%af%e6%88%90%e9%95%bf%e8%a7%84%e5%88%92">
+  <link rel="alternate" type="application/rss+xml" title="前端栗仔 | Thinking in Front-end" href="http://blog.comiclee.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">前端栗仔 | Thinking in Front-end</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/about/">关于我</a>
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">【转】PHP程序员的技术成长规划</h1>
+    <p class="post-meta">Oct 15, 2014 • comiclee</p>
+  </header>
+
+  <article class="post-content">
+    <p>PHP是当今最流行的web服务端语言，像facebook、百度都使用PHP作为网站主要语言。很多同学也有志于深入学习PHP，成为PHP专家，苦于不知道该了解哪些知识，处于迷茫之中。我作为前端工程师，想学习PHP，也不知该从哪儿下手，今天看到PHP的大牛@黑夜路人写了一篇PHP程序员的技术成长规划，写得挺实在的，忍不住拿来转发给大家，学习、共勉：</p>
+
+<h1 id="php">第一阶段：基础阶段（基础PHP程序员）</h1>
+
+<p>重点：把LNMP搞熟练（核心是安装配置基本操作）<br />
+目标：能够完成基本的LNMP系统安装，简单配置维护；能够做基本的简单系统的PHP开发；能够在PHP中型系统中支持某个PHP功能模块的开发。<br />
+时间：完成本阶段的时间因人而异，有的成长快半年一年就过了，成长慢的两三年也有。</p>
+
+<p>1.Linux：<br />
+基本命令、操作、启动、基本服务配置（包括rpm安装文件，各种服务配置等）；会写简单的shell脚本和awk/sed 脚本命令等。</p>
+
+<p>2.Nginx：<br />
+做到能够安装配置nginx+php，知道基本的nginx核心配置选项，知道 server/fastcgi_pass/access_log 等基础配置，目标是能够让nginx+php_fpm顺利工作。</p>
+
+<p>3.MySQL：<br />
+会自己搭建mysql，知道基本的mysql配置选项；知道innodb和myisam的区别，知道针对InnoDB和MyISAM两个引擎的不同配置选项；知道基本的两个引擎的差异和选择上面的区别；能够纯手工编译搭建一个MySQL数据库并且配置好编码等正常稳定运行；核心主旨是能够搭建一个可运行的MySQL数据库。</p>
+
+<p>4.PHP：<br />
+基本语法数组、字符串、数据库、XML、Socket、GD/ImageMgk图片处理等等；熟悉各种跟MySQL操作链接的api（mysql/mysqli/PDO)，知道各种编码问题的解决；知道常规熟练使用的PHP框架（ThinkPHP、Zendframework、Yii、Yaf等）；了解基本MVC的运行机制和为什么这么做，稍微知道不同的PHP框架之间的区别；能够快速学习一个MVC框架。能够知道开发工程中的文件目录组织，有基本的良好的代码结构和风格，能够完成小系统的开发和中型系统中某个模块的开发工作。</p>
+
+<p>5.前端：<br />
+如果条件时间允许，可以适当学习下 HTML/CSS/JS 等相关知识，知道什么web标准，div+css的web/wap页面模式，知道HTML5和HTML4的区别；了解一些基本的前端只是和JS框架（jQuery之类的）；了解一些基本的JavaScript编程知识；（本项不是必须项，如果有时间，稍微了解一下是可以的，不过不建议作为重点，除非个人有强烈兴趣）</p>
+
+<p>6.系统设计：<br />
+能够完成小型系统的基本设计，包括简单的数据库设计，能够完成基本的：浏览器 -&gt; Nginx+PHP -&gt; 数据库 架构的设计开发工作；能够支撑每天几十万到数百万流量网站的开发维护工作；</p>
+
+<h1 id="php-1">第二阶段：提高阶段 （中级PHP程序员）</h1>
+
+<p>为了尊重原作，就不全篇引用啦，大家移步看原文吧～</p>
+
+<p>原文链接：<a href="http://blog.csdn.net/heiyeshuwu/article/details/40098043" target="_blank">http://blog.csdn.net/heiyeshuwu/article/details/40098043</a></p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">前端栗仔 | Thinking in Front-end</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>前端栗仔 | Thinking in Front-end</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Thinking in Front-end</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>关于我</title>
-  <meta name="description" content="Thinking in Front-end">
+  <title>开始使用input事件</title>
+  <meta name="description" content="在pc时代，我们习惯于使用keyup或keydow事件来实时监听输入框的输入，但在移动设备上可能会有些问题，例如最近在项目中发现，iphone的搜狗输入法输入时并没有触发keyup或keydown事件，导致对这两个事件的监听失败。">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://blog.comiclee.com/about/">
+  <link rel="canonical" href="http://blog.comiclee.com/2015/09/%e5%bc%80%e5%a7%8b%e4%bd%bf%e7%94%a8input%e4%ba%8b%e4%bb%b6">
   <link rel="alternate" type="application/rss+xml" title="前端栗仔 | Thinking in Front-end" href="http://blog.comiclee.com/feed.xml" />
 </head>
 
@@ -61,12 +61,14 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">关于我</h1>
+    <h1 class="post-title">开始使用input事件</h1>
+    <p class="post-meta">Sep 19, 2015 • comiclee</p>
   </header>
 
   <article class="post-content">
-    <p>I am <a target="_blank" href="http://weibo.com/comiclee00">栗仔comiclee</a><br />
-<a target="_blank" href="http://weibo.com/comiclee00"><img class="size-full wp-image-117" src="http://blog.comiclee.com/wp-content/uploads/2015/01/1.jpg" alt="I am 栗仔comiclee" width="180" height="180" /></a></p>
+    <p>在pc时代，我们习惯于使用keyup或keydow事件来实时监听输入框的输入，但在移动设备上可能会有些问题，例如最近在项目中发现，iphone的搜狗输入法输入时并没有触发keyup或keydown事件，导致对这两个事件的监听失败。<!--more--></p>
+
+<p>最简单的解决方法就是使用input事件。input事件是HTML5的标准事件，虽然在IE只有IE9以上才支持，但在移动设备上还是支持得挺好的，代码就不写了，直接把keyup/keydown事件替换成input事件即可。</p>
 
   </article>
 

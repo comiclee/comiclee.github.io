@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>word-wrap,word-break和white-space</title>
+  <meta name="description" content="word-wrap、word-break和white-space这3个属性影响着页面文章的排版，它们看起来比较接近，容易让人混淆。本文就仔细讨论一下他们的用法，让人们理解它们的作用和使用场景，就能更好地掌握页面的排版。">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.comiclee.com/2015/08/word-wrapword-break%e5%92%8cwhite-space">
+  <link rel="alternate" type="application/rss+xml" title="前端栗仔 | Thinking in Front-end" href="http://blog.comiclee.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">前端栗仔 | Thinking in Front-end</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/about/">关于我</a>
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">word-wrap,word-break和white-space</h1>
+    <p class="post-meta">Aug 7, 2015 • comiclee</p>
+  </header>
+
+  <article class="post-content">
+    <p>word-wrap、word-break和white-space这3个属性影响着页面文章的排版，它们看起来比较接近，容易让人混淆。本文就仔细讨论一下他们的用法，让人们理解它们的作用和使用场景，就能更好地掌握页面的排版。<!--more--></p>
+
+<h1 id="word-wrap">word-wrap</h1>
+
+<p>word-wrap这个属性源自微软的IE浏览器（所以它的浏览器兼容性是很好的），它只有一个功能——设置当一个英文单词太长以致超出容器时，是否将其截断。它有两个取值：</p>
+
+<table class="dataintable">
+  <tr>
+    <th>
+      值
+    </th>
+    
+    <th>
+      描述
+    </th>
+  </tr>
+  
+  <tr>
+    <td>
+      normal
+    </td>
+    
+    <td>
+      只在允许的断字点换行（浏览器保持默认处理）。
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      break-word
+    </td>
+    
+    <td>
+      在长单词或 URL 地址内部进行换行。
+    </td>
+  </tr>
+</table>
+
+<p>默认取值是normal，也就是说长单词不会在中间断行，而是会直接超出去，并且长单词会另起一行放置，如下面这个例子：</p>
+
+<div style="width: 50px; border: 1px dotted gray; word-wrap: normal;">
+  你是abcdefghijklmnop吗？
+</div>
+
+<p> </p>
+
+<p>大多数情况我们是不想要这样的，我们希望长单词在中间断行，以满足容器尺寸的限制，那么我们就可以加上 <span class="lang:css decode:true  crayon-inline ">word-wrap:break-word</span> ，效果如下：</p>
+
+<div style="width: 50px; border: 1px dotted gray; word-wrap: break-word;">
+  你是abcdefghijklmnop吗？
+</div>
+
+<p> </p>
+
+<p>虽然单词截断了，但也不太影响阅读，布局也美观了。</p>
+
+<h1 id="word-break">word-break</h1>
+
+<p>那word-break是什么作用呢？我们发现刚才用word-wrap仍然没有完美解决问题，看如下的例子：</p>
+
+<div style="width: 100px; border: 1px dotted gray; word-wrap: break-word;">
+  你是abcdefghijklmnop吗？
+</div>
+
+<p> </p>
+
+<p>虽然长单词截断了，但单词还是另起一行放置，这仍然不够美观，于是word-break就登场了。word-break设置怎样在单词内断行。一般文档都没有太详细的介绍</p>
+
+<table class="dataintable">
+  <tr>
+    <td>
+      normal
+    </td>
+    
+    <td>
+      使用浏览器默认的换行规则。
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      break-all
+    </td>
+    
+    <td>
+      允许在单词内换行。
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      keep-all(chrome未实现)
+    </td>
+    
+    <td>
+      只能在半角空格或连字符处换行。
+    </td>
+  </tr>
+</table>
+
+<p>由于keep-all值在chrome和opera中未实现，所以使用得比较少，我们常常用的是break-all，使用后的效果如下：</p>
+
+<div style="width: 100px; border: 1px dotted gray; word-wrap: normal; word-break: break-all;">
+  你是abcdefghijklmnop吗？
+</div>
+
+<p> </p>
+
+<p>这就是我们常常看到的<span class="lang:js decode:true  crayon-inline">word-wrap:break-word; word-break:break-all;</span> 组合用法的效果。</p>
+
+<p>以上的属性的显示效果在桌面浏览器上是ok的，但在手机浏览器safari上，会出现标点符号居于行首的问题。这在文章的排版中是要尽量避免的。经试验，设置<span class="lang:js decode:true  crayon-inline ">word-break:normal</span> 就不会有这个问题，但又回到了刚才的讨论，这需要结合场景来讨论。在没有长单词的情况下，我们大可以设置<span class="lang:js decode:true  crayon-inline ">word-break:normal</span> 以避免出现标点符号出现在行首的问题。</p>
+
+<h1 id="white-space">white-space</h1>
+
+<p>最后说说white-space，这个属性用于指示如何处理文本中的空白，空白包括空格、换行符等空白字符。我们最常用的是nowrap属性，即文本不换行，用上这个属性后，word-wrap和word-break都形同虚设，所有都不会换行了。</p>
+
+<table class="dataintable">
+  <tr>
+    <td>
+      normal
+    </td>
+    
+    <td>
+      默认。空白会被浏览器忽略。
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      pre
+    </td>
+    
+    <td>
+      空白会被浏览器保留。其行为方式类似 HTML 中的 <pre> 标签。
+    
+  
+  
+  <tr>
+    <td>
+      nowrap
+    </td>
+    
+    <td>
+      文本不会换行，文本会在在同一行上继续，直到遇到 <br /> 标签为止。
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      pre-wrap
+    </td>
+    
+    <td>
+      保留空白符序列，但是正常地进行换行。
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      pre-line
+    </td>
+    
+    <td>
+      合并空白符序列，但是保留换行符。
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      inherit
+    </td>
+    
+    <td>
+      规定应该从父元素继承 white-space 属性的值。
+    </td>
+  </tr>
+
+
+下表能更清晰地分辨出各属性值的功能
+
+<table class="dataintable">
+  <tr>
+    <th>
+    </th>
+    
+    <th>
+      换行符
+    </th>
+    
+    <th>
+      空格和制表符
+    </th>
+    
+    <th>
+      文字转行
+    </th>
+  </tr>
+  
+  <tr>
+    <td>
+      <span style="font-family: Consolas, Monaco, 'Lucida Console', monospace;">nomal</span>
+    </td>
+    
+    <td>
+      合并
+    </td>
+    
+    <td>
+      合并
+    </td>
+    
+    <td>
+      转行
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>nowrap</code>
+    </td>
+    
+    <td>
+      合并
+    </td>
+    
+    <td>
+      合并
+    </td>
+    
+    <td>
+      不转行
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>pre</code>
+    </td>
+    
+    <td>
+      保留
+    </td>
+    
+    <td>
+      保留
+    </td>
+    
+    <td>
+      不转行
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>pre-wrap</code>
+    </td>
+    
+    <td>
+      保留
+    </td>
+    
+    <td>
+      保留
+    </td>
+    
+    <td>
+      转行
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>pre-line</code>
+    </td>
+    
+    <td>
+      保留
+    </td>
+    
+    <td>
+      合并
+    </td>
+    
+    <td>
+      转行
+    </td>
+  </tr>
+</table>
+
+&nbsp;
+</pre></td></tr></table>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">前端栗仔 | Thinking in Front-end</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>前端栗仔 | Thinking in Front-end</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Thinking in Front-end</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

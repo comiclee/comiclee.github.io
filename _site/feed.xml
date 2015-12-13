@@ -5,9 +5,577 @@
     <description>Thinking in Front-end</description>
     <link>http://blog.comiclee.com/</link>
     <atom:link href="http://blog.comiclee.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 20 Mar 2015 16:01:20 +0800</pubDate>
-    <lastBuildDate>Fri, 20 Mar 2015 16:01:20 +0800</lastBuildDate>
-    <generator>Jekyll v2.5.3</generator>
+    <pubDate>Sun, 13 Dec 2015 23:27:02 +0800</pubDate>
+    <lastBuildDate>Sun, 13 Dec 2015 23:27:02 +0800</lastBuildDate>
+    <generator>Jekyll v3.0.1</generator>
+    
+      <item>
+        <title>icomoon生成的字体在安卓的一些浏览器上无法显示的问题</title>
+        <description>&lt;p&gt;这个bug发生的条件不普遍，就是在小米2上的微信webview中，原想跳过不管的，不过由于不知道还有哪些机器会受此牵连，这会极大影响我使用icon fonts的信心，故上网搜搜有没有解决方案，终于找到解决方案，还挺简单的。&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;详见这篇文章&lt;a href=&quot;http://www.cnblogs.com/Megasu/p/4305116.html&quot; target=&quot;_blank&quot;&gt;http://www.cnblogs.com/Megasu/p/4305116.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;总结一下挺简单的，icomoon生成的font排列顺序是：&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;@font-face {font-family: &quot;iconfont&quot;;
+  src: url(&#39;iconfont.eot&#39;); /* IE9*/
+  src: url(&#39;iconfont.eot?#iefix&#39;) format(&#39;embedded-opentype&#39;), /* IE6-IE8 */
+  url(&#39;iconfont.woff&#39;) format(&#39;woff&#39;), /* chrome、firefox */
+  url(&#39;iconfont.ttf&#39;) format(&#39;truetype&#39;), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url(&#39;iconfont.svg#iconfont&#39;) format(&#39;svg&#39;); /* iOS 4.1- */
+}&lt;/pre&gt;
+
+&lt;p&gt;我们调节一下加载顺序，改成eto,svg,woff,ttf(把SVG放到前面) 即可&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true&quot;&gt;@font-face {font-family: &quot;iconfont&quot;;
+  src: url(&#39;../font/iconfont.eot&#39;); /* IE9*/
+  src: url(&#39;../font/iconfont.svg#iconfont&#39;) format(&#39;svg&#39;), /* iOS 4.1- */
+  url(&#39;../font/iconfont.woff&#39;) format(&#39;woff&#39;), /* chrome、firefox */
+  url(&#39;../font/iconfont.ttf&#39;) format(&#39;truetype&#39;); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ 
+}&lt;/pre&gt;
+
+&lt;p&gt; &lt;/p&gt;
+</description>
+        <pubDate>Sat, 19 Sep 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/09/icomoon%e7%94%9f%e6%88%90%e7%9a%84%e5%ad%97%e4%bd%93%e5%9c%a8%e5%ae%89%e5%8d%93%e7%9a%84%e4%b8%80%e4%ba%9b%e6%b5%8f%e8%a7%88%e5%99%a8%e4%b8%8a%e6%97%a0%e6%b3%95%e6%98%be%e7%a4%ba%e7%9a%84%e9%97%ae</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/09/icomoon%e7%94%9f%e6%88%90%e7%9a%84%e5%ad%97%e4%bd%93%e5%9c%a8%e5%ae%89%e5%8d%93%e7%9a%84%e4%b8%80%e4%ba%9b%e6%b5%8f%e8%a7%88%e5%99%a8%e4%b8%8a%e6%97%a0%e6%b3%95%e6%98%be%e7%a4%ba%e7%9a%84%e9%97%ae</guid>
+        
+        
+        <category>移动前端</category>
+        
+      </item>
+    
+      <item>
+        <title>开始使用input事件</title>
+        <description>&lt;p&gt;在pc时代，我们习惯于使用keyup或keydow事件来实时监听输入框的输入，但在移动设备上可能会有些问题，例如最近在项目中发现，iphone的搜狗输入法输入时并没有触发keyup或keydown事件，导致对这两个事件的监听失败。&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;最简单的解决方法就是使用input事件。input事件是HTML5的标准事件，虽然在IE只有IE9以上才支持，但在移动设备上还是支持得挺好的，代码就不写了，直接把keyup/keydown事件替换成input事件即可。&lt;/p&gt;
+</description>
+        <pubDate>Sat, 19 Sep 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/09/%e5%bc%80%e5%a7%8b%e4%bd%bf%e7%94%a8input%e4%ba%8b%e4%bb%b6</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/09/%e5%bc%80%e5%a7%8b%e4%bd%bf%e7%94%a8input%e4%ba%8b%e4%bb%b6</guid>
+        
+        
+        <category>Javascript</category>
+        
+      </item>
+    
+      <item>
+        <title>word-wrap,word-break和white-space</title>
+        <description>&lt;p&gt;word-wrap、word-break和white-space这3个属性影响着页面文章的排版，它们看起来比较接近，容易让人混淆。本文就仔细讨论一下他们的用法，让人们理解它们的作用和使用场景，就能更好地掌握页面的排版。&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;word-wrap&quot;&gt;word-wrap&lt;/h1&gt;
+
+&lt;p&gt;word-wrap这个属性源自微软的IE浏览器（所以它的浏览器兼容性是很好的），它只有一个功能——设置当一个英文单词太长以致超出容器时，是否将其截断。它有两个取值：&lt;/p&gt;
+
+&lt;table class=&quot;dataintable&quot;&gt;
+  &lt;tr&gt;
+    &lt;th&gt;
+      值
+    &lt;/th&gt;
+    
+    &lt;th&gt;
+      描述
+    &lt;/th&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      normal
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      只在允许的断字点换行（浏览器保持默认处理）。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      break-word
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      在长单词或 URL 地址内部进行换行。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;默认取值是normal，也就是说长单词不会在中间断行，而是会直接超出去，并且长单词会另起一行放置，如下面这个例子：&lt;/p&gt;
+
+&lt;div style=&quot;width: 50px; border: 1px dotted gray; word-wrap: normal;&quot;&gt;
+  你是abcdefghijklmnop吗？
+&lt;/div&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;大多数情况我们是不想要这样的，我们希望长单词在中间断行，以满足容器尺寸的限制，那么我们就可以加上 &lt;span class=&quot;lang:css decode:true  crayon-inline &quot;&gt;word-wrap:break-word&lt;/span&gt; ，效果如下：&lt;/p&gt;
+
+&lt;div style=&quot;width: 50px; border: 1px dotted gray; word-wrap: break-word;&quot;&gt;
+  你是abcdefghijklmnop吗？
+&lt;/div&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;虽然单词截断了，但也不太影响阅读，布局也美观了。&lt;/p&gt;
+
+&lt;h1 id=&quot;word-break&quot;&gt;word-break&lt;/h1&gt;
+
+&lt;p&gt;那word-break是什么作用呢？我们发现刚才用word-wrap仍然没有完美解决问题，看如下的例子：&lt;/p&gt;
+
+&lt;div style=&quot;width: 100px; border: 1px dotted gray; word-wrap: break-word;&quot;&gt;
+  你是abcdefghijklmnop吗？
+&lt;/div&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;虽然长单词截断了，但单词还是另起一行放置，这仍然不够美观，于是word-break就登场了。word-break设置怎样在单词内断行。一般文档都没有太详细的介绍&lt;/p&gt;
+
+&lt;table class=&quot;dataintable&quot;&gt;
+  &lt;tr&gt;
+    &lt;td&gt;
+      normal
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      使用浏览器默认的换行规则。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      break-all
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      允许在单词内换行。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      keep-all(chrome未实现)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      只能在半角空格或连字符处换行。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;由于keep-all值在chrome和opera中未实现，所以使用得比较少，我们常常用的是break-all，使用后的效果如下：&lt;/p&gt;
+
+&lt;div style=&quot;width: 100px; border: 1px dotted gray; word-wrap: normal; word-break: break-all;&quot;&gt;
+  你是abcdefghijklmnop吗？
+&lt;/div&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;这就是我们常常看到的&lt;span class=&quot;lang:js decode:true  crayon-inline&quot;&gt;word-wrap:break-word; word-break:break-all;&lt;/span&gt; 组合用法的效果。&lt;/p&gt;
+
+&lt;p&gt;以上的属性的显示效果在桌面浏览器上是ok的，但在手机浏览器safari上，会出现标点符号居于行首的问题。这在文章的排版中是要尽量避免的。经试验，设置&lt;span class=&quot;lang:js decode:true  crayon-inline &quot;&gt;word-break:normal&lt;/span&gt; 就不会有这个问题，但又回到了刚才的讨论，这需要结合场景来讨论。在没有长单词的情况下，我们大可以设置&lt;span class=&quot;lang:js decode:true  crayon-inline &quot;&gt;word-break:normal&lt;/span&gt; 以避免出现标点符号出现在行首的问题。&lt;/p&gt;
+
+&lt;h1 id=&quot;white-space&quot;&gt;white-space&lt;/h1&gt;
+
+&lt;p&gt;最后说说white-space，这个属性用于指示如何处理文本中的空白，空白包括空格、换行符等空白字符。我们最常用的是nowrap属性，即文本不换行，用上这个属性后，word-wrap和word-break都形同虚设，所有都不会换行了。&lt;/p&gt;
+
+&lt;table class=&quot;dataintable&quot;&gt;
+  &lt;tr&gt;
+    &lt;td&gt;
+      normal
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      默认。空白会被浏览器忽略。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      pre
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      空白会被浏览器保留。其行为方式类似 HTML 中的 &lt;pre&gt; 标签。
+    
+  
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      nowrap
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      文本不会换行，文本会在在同一行上继续，直到遇到 &lt;br /&gt; 标签为止。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      pre-wrap
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      保留空白符序列，但是正常地进行换行。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      pre-line
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      合并空白符序列，但是保留换行符。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      inherit
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      规定应该从父元素继承 white-space 属性的值。
+    &lt;/td&gt;
+  &lt;/tr&gt;
+
+
+下表能更清晰地分辨出各属性值的功能
+
+&lt;table class=&quot;dataintable&quot;&gt;
+  &lt;tr&gt;
+    &lt;th&gt;
+    &lt;/th&gt;
+    
+    &lt;th&gt;
+      换行符
+    &lt;/th&gt;
+    
+    &lt;th&gt;
+      空格和制表符
+    &lt;/th&gt;
+    
+    &lt;th&gt;
+      文字转行
+    &lt;/th&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;span style=&quot;font-family: Consolas, Monaco, &#39;Lucida Console&#39;, monospace;&quot;&gt;nomal&lt;/span&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      合并
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      合并
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      转行
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;code&gt;nowrap&lt;/code&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      合并
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      合并
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      不转行
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;code&gt;pre&lt;/code&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      保留
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      保留
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      不转行
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;code&gt;pre-wrap&lt;/code&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      保留
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      保留
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      转行
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;code&gt;pre-line&lt;/code&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      保留
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      合并
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      转行
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&amp;nbsp;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+</description>
+        <pubDate>Fri, 07 Aug 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/08/word-wrapword-break%e5%92%8cwhite-space</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/08/word-wrapword-break%e5%92%8cwhite-space</guid>
+        
+        
+        <category>css</category>
+        
+      </item>
+    
+      <item>
+        <title>Date的迷思</title>
+        <description>&lt;p&gt;不得不说Javascript的Date类的功能实在比较弱，没有format功能，导致创建和打印的时候都要多费一些代码。对于创建Date对象，有四种方法可以用：&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true &quot;&gt;new Date();
+new Date(value);
+new Date(dateString);
+new Date(year, month, day, hour, minute, second, millisecond);&lt;/pre&gt;
+
+&lt;p&gt;其中1、2、4的参数比较确定，不用多说。而方法3的dateString是什么格式？这是需要注意的地方。该参数的解释是这样的：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;表示日期的字符串值。该字符串应该能被 Date.parse() 方法识别（符合 &lt;a href=&quot;http://tools.ietf.org/html/rfc2822#page-14&quot; target=&quot;_blank&quot;&gt;IETF-compliant RFC 2822 timestamps&lt;/a&gt; 或 &lt;a href=&quot;http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15&quot; target=&quot;_blank&quot;&gt;version of ISO8601&lt;/a&gt;）。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;写这种字符串是什么体验？&lt;/p&gt;
+
+&lt;pre class=&quot;lang:js decode:true&quot;&gt;new Date(&quot;Apr 14, 2015&quot;);
+new Date(&quot;Tue, 14 Apr 2015 21:06:25 GMT+0800&quot;);&lt;/pre&gt;
+
+&lt;p&gt;这种不太符合中国人习惯的风格写起来真是别扭啊。需要摸索一个简洁的写法，比如说”2015-04-14″，这种格式行不行呢？在几款浏览器下做了实验，并不是完全兼容的。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;
+    &lt;/th&gt;
+    
+    &lt;th&gt;
+      Chrome
+    &lt;/th&gt;
+    
+    &lt;th&gt;
+      IE9,10
+    &lt;/th&gt;
+    
+    &lt;th&gt;
+      IE6-8
+    &lt;/th&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+       new Date(&amp;#8216;2015-04-14&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       &lt;span style=&quot;color: #ff0000;&quot;&gt;Tue Apr 14 2015 08:00:00 GMT+0800 (CST)&lt;/span&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      &lt;span style=&quot;color: #ff0000;&quot;&gt; Tue Apr 14 08:00:00 UTC+0800 2015&lt;/span&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      &lt;span style=&quot;color: #ff0000;&quot;&gt; NaN&lt;/span&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      new Date(&amp;#8216;2015-4-14&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       Tue Apr 14 2015 00:00:00 GMT+0800 (CST)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+        &lt;span style=&quot;color: #ff0000;&quot;&gt;Invalid Date&lt;/span&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       &lt;span style=&quot;color: #ff0000;&quot;&gt;NaN&lt;/span&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      new Date(&amp;#8216;2015-04-14 21:12:25&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       Tue Apr 14 2015 21:12:25 GMT+0800 (CST)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      &lt;span style=&quot;color: #ff0000;&quot;&gt; Invalid Date&lt;/span&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      &lt;span style=&quot;color: #ff0000;&quot;&gt; NaN&lt;/span&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+       new Date(&amp;#8216;2015-4-14 21:12:25&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       Tue Apr 14 2015 21:12:25 GMT+0800 (CST)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       &lt;span style=&quot;color: #ff0000;&quot;&gt;Invalid Date&lt;/span&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       &lt;span style=&quot;color: #ff0000;&quot;&gt;NaN&lt;/span&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+       new Date(&amp;#8216;2015/04/14&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      Tue Apr 14 2015 00:00:00 GMT+0800 (CST)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      Tue Apr 14 00:00:00 UTC+0800 2015
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       Tue Apr 14 00:00:00 UTC+0800 2015
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      new Date(&amp;#8216;2015/4/14&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      Tue Apr 14 2015 00:00:00 GMT+0800 (CST)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       Tue Apr 14 00:00:00 UTC+0800 2015
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      Tue Apr 14 00:00:00 UTC+0800 2015
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+       new Date(&amp;#8217;15/04/14&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      &lt;span style=&quot;color: #ff0000;&quot;&gt; Invalid Date&lt;/span&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       &lt;span style=&quot;color: #ff0000;&quot;&gt;Thu Mar 4 00:00:00 UTC+0800 1915&lt;/span&gt;
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       &lt;span style=&quot;color: #ff0000;&quot;&gt;Thu Mar 4 00:00:00 UTC+0800 1915&lt;/span&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+       new Date(&amp;#8216;2015/04/14 21:06:25&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       Tue Apr 14 2015 21:06:25 GMT+0800 (CST)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       Tue Apr 14 21:06:25 UTC+0800 2015
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      Tue Apr 14 21:06:25 UTC+0800 2015
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;tr&gt;
+    &lt;td&gt;
+      new Date(&amp;#8216;2015/4/14 21:6:25&amp;#8242;)
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      Tue Apr 14 21:06:25 UTC+0800 2015
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+       Tue Apr 14 21:06:25 UTC+0800 2015
+    &lt;/td&gt;
+    
+    &lt;td&gt;
+      Tue Apr 14 21:06:25 UTC+0800 2015
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;p&gt;从以上浏览器的比较中可以看出形如”yyyy-MM-dd”在IE中的兼容性不佳，亦有时区的问题。而&lt;strong&gt;“yyyy/MM/dd”&lt;/strong&gt;以及&lt;strong&gt;“yyyy/MM/dd HH:mm:ss”&lt;/strong&gt;在各浏览器下的兼容性比较好，推荐使用这个。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 29 Jul 2015 00:00:00 +0800</pubDate>
+        <link>http://blog.comiclee.com/2015/07/date%e7%9a%84%e8%bf%b7%e6%80%9d</link>
+        <guid isPermaLink="true">http://blog.comiclee.com/2015/07/date%e7%9a%84%e8%bf%b7%e6%80%9d</guid>
+        
+        
+        <category>Javascript</category>
+        
+      </item>
     
       <item>
         <title>Javascript的严格模式</title>
@@ -125,7 +693,7 @@ print(x); // 8 - in octal radix&lt;/pre&gt;
  
 var x = 010; // SyntaxError&lt;/pre&gt;
 
-&lt;p&gt;另外提一点，在ES3中使用 &lt;span class=&quot;lang:js decode:true  crayon-inline &quot;&gt;parseInt(’010′)&lt;/span&gt; 会默认转成八进制数字，不过这在ES5中已经改为转换成十进制数字了，不管有没有严格模式。&lt;/p&gt;
+&lt;p&gt;另外提一点，在ES3中使用 &lt;span class=&quot;lang:js decode:true  crayon-inline &quot;&gt;parseInt(‘010′)&lt;/span&gt; 会默认转成八进制数字，不过这在ES5中已经改为转换成十进制数字了，不管有没有严格模式。&lt;/p&gt;
 
 &lt;h2 id=&quot;section-5&quot;&gt; 给未声明的变量赋值&lt;/h2&gt;
 
@@ -439,7 +1007,7 @@ var b = new A(10); // OK&lt;/pre&gt;
         <category>Javascript</category>
         
         
-        <category>javascript</category>
+        <category>Javascript</category>
         
       </item>
     
@@ -557,7 +1125,7 @@ $(&#39;#myForm&#39;).ajaxForm(function() {
         <category>XMLHttpRequest2</category>
         
         
-        <category>javascript</category>
+        <category>Javascript</category>
         
       </item>
     
@@ -1207,7 +1775,7 @@ $(&#39;#myForm&#39;).ajaxForm(function() {
     &lt;/td&gt;
     
     &lt;td valign=&quot;top&quot;&gt;
-      &amp;#8216;foobar&amp;#8217;[3]==&amp;#8217;b&amp;#8217;
+      &amp;#8216;foobar&#39;[3]==&amp;#8217;b&amp;#8217;
     &lt;/td&gt;
     
     &lt;td valign=&quot;top&quot;&gt;
@@ -1247,7 +1815,7 @@ $(&#39;#myForm&#39;).ajaxForm(function() {
     &lt;/td&gt;
     
     &lt;td valign=&quot;top&quot;&gt;
-      parseInt(&amp;#8217;010&amp;#8242;) === 10;
+      parseInt(&amp;#8216;010&amp;#8242;) === 10;
     &lt;/td&gt;
     
     &lt;td valign=&quot;top&quot;&gt;
@@ -1288,7 +1856,7 @@ $(&#39;#myForm&#39;).ajaxForm(function() {
         <category>Javascript</category>
         
         
-        <category>javascript</category>
+        <category>Javascript</category>
         
       </item>
     
@@ -1330,391 +1898,7 @@ echo $sum | md5sum&lt;/pre&gt;
         <category>Linux</category>
         
         
-        <category>linux</category>
-        
-      </item>
-    
-      <item>
-        <title>手机html5页面进行拍照和照片处理</title>
-        <description>&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-背景&quot; style=&quot;color: #333333;&quot;&gt;
-  &lt;strong&gt;背景&lt;/strong&gt;
-&lt;/h1&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-   利用html5的API，在手机上也能够调起摄像头进行拍照、并对照片进行编辑。APP能做的h5也能做到，而且也不复杂。本文就介绍一下如何实现。
-&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-调起系统相机&quot; style=&quot;color: #333333;&quot;&gt;
-  &lt;strong&gt;调起系统相机&lt;/strong&gt;
-&lt;/h1&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-   使用type值为file，并设置accept属性的input标签，用户点击该元素即可唤起系统的摄像头/图库的菜单。如下：
-&lt;/p&gt;
-
-&lt;pre style=&quot;color: #333333;&quot;&gt;&amp;lt;input id=&quot;camera&quot; type=&quot;file&quot; accept=&quot;image/*&quot;&amp;gt;&lt;/pre&gt;
-
-&lt;div class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;
-&lt;/div&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  需要注意的是，在安卓的WebView中，改功能默认是关闭的，需要在程序中打开该功能。&lt;br /&gt; 拍完照片后，可以将照片当作文件进行表单提交，但手机拍的照片文件大小一般比较大，要占用不少的宝贵的移动流量，同时也需要用户长时间的等待，所以我们对照片进行一定的压缩再提交。首先，我们需要读取拍到的照片。
-&lt;/p&gt;
-
-&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-读取拍到的图片&quot; style=&quot;color: #333333;&quot;&gt;
-  &lt;strong&gt;读取拍到的图片&lt;/strong&gt;
-&lt;/h1&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-   html5提供了FileReader对象来读取本地文件，使用readAsDataURL读取文件的base64编码数据
-&lt;/p&gt;
-
-&lt;pre style=&quot;color: #333333;&quot;&gt;$(&#39;#camera&#39;).change(function(evt) {
- if (evt.target.files.length&amp;gt;0) {
-  var file = evt.target.files[0];
-  var reader = new FileReader();
-  reader.onload = function(e) {
-   var image = new Image();
-   image.onload = function() {
-    processImage(image);
-   };
-   image.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
- }
-});&lt;/pre&gt;
-
-&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-处理照片&quot; style=&quot;color: #333333;&quot;&gt;
-  &lt;strong&gt;处理照片&lt;/strong&gt;
-&lt;/h1&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  使用canvas进行图片处理，我们将图片按比例缩小绘制在canvas上。例如我们将图片的尺寸缩小到0.1
-&lt;/p&gt;
-
-&lt;pre class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;var canvas = document.getElementById(&#39;canvas&#39;);
-var ratio = 0.1;
-function processImage(image) {
- var ctx = canvas.getContext(‘2d’);
- canvas.width = image.width*ratio;
- canvas.height = image.height*ratio;
- ctx.clearRect(0,0,canvas.width,canvas.height);
- ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-}&lt;/pre&gt;
-
-&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-导出处理后的照片&quot; style=&quot;color: #333333;&quot;&gt;
-  &lt;strong&gt;导出处理后的照片&lt;/strong&gt;
-&lt;/h1&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  使用canvas的toDataURL方法导出处理后的图片的base64编码数据。可以在方法的参数中设定图片格式，默认值为image/png。
-&lt;/p&gt;
-
-&lt;pre class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;canvas.toDataURL(&#39;image/jpeg&#39;)&lt;/pre&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  由于base64格式的数据带有 &lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;http://dataimage/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;data:image/jpeg;base64&lt;/a&gt;, 这类的头，后端解析的时候需要把这个头去掉，这可以在前端做，也可以在后端做。
-&lt;/p&gt;
-
-&lt;h1 id=&quot;id-手机html5页面进行拍照和照片处理-不得不提的坑&quot; style=&quot;color: #333333;&quot;&gt;
-  &lt;strong&gt;不得不提的坑&lt;/strong&gt;
-&lt;/h1&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  整个图片的处理流程并不是很复杂，但当我们实际操作的时候，却发现事实远没有那么简单。我们遇到两个大坑：&lt;br /&gt; 1. iphone拍的照片绘制出来会被压扁&lt;br /&gt; 2. 照片的旋转方向不正确
-&lt;/p&gt;
-
-&lt;p&gt;好在这两个问题有不少开发者也遇到过，我们在网上找到答案：&lt;br /&gt;
-1. 照片被压扁的问题可以参考&lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios&lt;/a&gt;&lt;/span&gt;&lt;/span&gt; ，利用答案中的detectVerticalSquash函数来对缩放比例进行修正。（这个函数出自&lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;https://github.com/stomita/ios-imagefile-megapixel&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;https://github.com/stomita/ios-imagefile-megapixel&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;，感谢stomita的工作）&lt;/p&gt;
-
-&lt;pre class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;ctx.drawImage(img, sx * vertSquashRatio, sy * vertSquashRatio,
- sw * vertSquashRatio, sh * vertSquashRatio,
- dx, dy, dw, dh );&lt;/pre&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  2. 利用Exif.js（&lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;https://github.com/jseidelin/exif-js&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;https://github.com/jseidelin/exif-js&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;）读取照片的旋转方向，并对Canvas进行旋转
-&lt;/p&gt;
-
-&lt;pre class=&quot;table-wrap&quot; style=&quot;color: #333333;&quot;&gt;$(&#39;#camera&#39;).change(function(evt) {
- if (evt.target.files.length&amp;gt;0) {
-  var file = evt.target.files[0];
- 
-  var rotation = 0;
-  EXIF.getData(file, function() {
-   var orientation = EXIF.getTag(this,&#39;Orientation&#39;);
-   switch (orientation) { //根据exif中照片的旋转信息对图片进行旋转
-    case 3: rotation=180; break;
-    case 6: rotation=90; break;
-    case 8: rotation=-90; break;
-    default : rotation=0;
-   }
- 
-   var reader = new FileReader();
-   reader.onload = function(e) {
-    var image = new Image();
-    image.onload = function() {
-     processImage(image, rotation);
-    };
-    image.src = e.target.result;
-   };
-   reader.readAsDataURL(file);
-  });
- }
-});
- 
-//修改processImage函数
-var canvas = document.getElementById(&#39;canvas&#39;);
-var ratio = 0.1;
-function processImage(image,rotation) {
- var ctx = canvas.getContext(&#39;2d&#39;);
- var imageWidthOrigin = image.width;
- var imageHeightOrigin = image.height;
- var imageWidth = imageWidthOrigin*ratio;
- var imageHeight = imageHeightOrigin*ratio;
- 
- canvas.width = imageWidth ;
- 
- canvas.height = imageHeight ;
- var startX = 0;
- var startY = 0;
- 
- if (rotation==90) {
-  canvas.width = imageHeight ;
-  canvas.height = imageWidth ;
-  startX = 0;
-  startY = -imageHeight;
- } else if (rotation==-90) {
-  canvas.width = imageHeight ;
-  canvas.height = imageWidth ;
-  startX = -imageWidth;
-  startY = 0;
- } else if (rotation==180 || rotation==-180) {
-  startX = -imageWidth;
-  startY = -imageHeight;
- }
- 
- ctx.clearRect(0,0,canvas.width,canvas.height);
- ctx.rotate(rotation*Math.PI/180);
- 
- var vertSquashRatio = detectVerticalSquash(image);
- ctx.drawImage(image, 0, 0, imageWidthOrigin*vertSquashRatio, imageHeightOrigin*vertSquashRatio, startX, startY, imageWidth, imageHeight);
-}&lt;/pre&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-&lt;/p&gt;
-</description>
-        <pubDate>Wed, 07 Jan 2015 00:00:00 +0800</pubDate>
-        <link>http://blog.comiclee.com/2015/01/%e6%89%8b%e6%9c%bahtml5%e9%a1%b5%e9%9d%a2%e8%bf%9b%e8%a1%8c%e6%8b%8d%e7%85%a7%e5%92%8c%e7%85%a7%e7%89%87%e5%a4%84%e7%90%86</link>
-        <guid isPermaLink="true">http://blog.comiclee.com/2015/01/%e6%89%8b%e6%9c%bahtml5%e9%a1%b5%e9%9d%a2%e8%bf%9b%e8%a1%8c%e6%8b%8d%e7%85%a7%e5%92%8c%e7%85%a7%e7%89%87%e5%a4%84%e7%90%86</guid>
-        
-        <category>html5</category>
-        
-        
-        <category>移动前端</category>
-        
-      </item>
-    
-      <item>
-        <title>Javascript的if判断以及相等运算(==)的类型转换规则</title>
-        <description>&lt;p&gt;Javascript的有些特性比较令人捉摸不透，例如以下的代码：&lt;/p&gt;
-
-&lt;pre&gt;if (&#39;0&#39;) alert(true); else alert(false);    //true
-if (&#39;0&#39;==true) alert(true); else alert(false);    //false&lt;/pre&gt;
-
-&lt;p&gt;按照程序员的正常思维，经过了隐式的类型转换，这两个语句应该得到相同的结果才对。可事实却出人意料。而这一切，都是由Javascript在这两种场景下的不同转换规则造成的。&lt;!--more--&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;boolean&quot;&gt;Boolean语境下的类型转换&lt;/h1&gt;
-
-&lt;p&gt;第一行语句if括号里的表达式预期得出一个Boolean值，于是系统自动调用Boolean方法，将’0′转换成Boolean值，该转换规则是将&lt;strong&gt;undefined&lt;/strong&gt;、&lt;strong&gt;null&lt;/strong&gt;、&lt;strong&gt;+0&lt;/strong&gt;、&lt;strong&gt;-0&lt;/strong&gt;、&lt;strong&gt;NaN&lt;/strong&gt;、&lt;strong&gt;”（空字符串）&lt;/strong&gt;返回false，其它的表达式返回true。’0′也返回true了。&lt;/p&gt;
-
-&lt;h1 id=&quot;section&quot;&gt;相等运算(==)下的类型转换&lt;/h1&gt;
-
-&lt;p&gt;第二行语句里有相等运算符，该运算符的转换规则则稍微有些复杂，这行语句得到的奇怪的结果也是因此而起。这里介绍一下相等运算符的转换规则：&lt;/p&gt;
-
-&lt;p&gt;** 1. Boolean值转成数字，false =&amp;gt; 0 , true =&amp;gt; 1**&lt;br /&gt;
-** 2. 如果一边是字符串，另一边是数字，则尝试把字符串转成数字**&lt;br /&gt;
-** 3. 如果一边是对象，另一边是字符串，则尝试把对象转成字符串**&lt;br /&gt;
-** 4. 如果一边是对象，另一边是数字，则尝试把对象转成数字**&lt;/p&gt;
-
-&lt;p&gt;根据第1条转换规则，先把等号右边的true转换为1，然后根据第2条转换规则，把’0′转换成0，再进行比较，结果返回false。&lt;/p&gt;
-
-&lt;p&gt;根据以上的转换规则，能得到很多匪夷所思的现象，这里就不一一列举了，感兴趣的亲们可以自己实验一下。&lt;/p&gt;
-
-&lt;p&gt;以上的规则对相等运算符还未阐述完全，比如以下的例子：&lt;/p&gt;
-
-&lt;pre&gt;if (new Number(0)==new Number(0)) alert(true); else alert(false);    //false
-if (new Number(0)==Number(0)) alert(true); else alert(false); //true&lt;/pre&gt;
-
-&lt;p&gt;且看&lt;/p&gt;
-
-&lt;h1 id=&quot;section-1&quot;&gt;相等运算(==)的比较规则&lt;/h1&gt;
-
-&lt;p&gt;相等运算符的比较规则是：&lt;/p&gt;
-
-&lt;p&gt;** 1. null和undefined相等**&lt;br /&gt;
-** 2. 不能把null和undefined转成其它值**&lt;br /&gt;
-** 3. 如果有一个是NaN，则==返回false，!=返回true**&lt;br /&gt;
-** 4. 如果两个都是对象，则比较引用值，相等返回true，否则返回false**&lt;/p&gt;
-
-&lt;p&gt;在上面最后一个例子中，new Number(0)返回的是一个对象，如果两边都是对象，则比较引用值，它们当然是不想等的，而Number(0)返回的是数字0，这样另一边的对象也会转换成数字0，结果它们是相等的。&lt;/p&gt;
-
-&lt;h1 id=&quot;section-2&quot;&gt; &amp;gt; , &amp;gt;= , &amp;lt; , &amp;lt;= 的运算规则&lt;/h1&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;null , undefined , 布尔值转换成数字&lt;/li&gt;
-  &lt;li&gt;如果一方是数字，则会把另一方也转换成数字，再进行比较&lt;/li&gt;
-  &lt;li&gt;如果一方是NaN，则返回false&lt;/li&gt;
-  &lt;li&gt;如果两边都是字符串，则逐字比较unicode值&lt;/li&gt;
-  &lt;li&gt;如果一边是字符串，另一边是对象，或者两边都是对象，则把对象转换成字符串，再进行比较&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;详细的运算规则可见：&lt;a href=&quot;http://bclary.com/2004/11/07/#a-11.8.5&quot; target=&quot;_blank&quot;&gt;http://bclary.com/2004/11/07/#a-11.8.5&lt;/a&gt;&lt;/p&gt;
-</description>
-        <pubDate>Sun, 04 Jan 2015 00:00:00 +0800</pubDate>
-        <link>http://blog.comiclee.com/2015/01/javascript%e7%9a%84if%e5%88%a4%e6%96%ad%e4%bb%a5%e5%8f%8a%e7%9b%b8%e7%ad%89%e8%bf%90%e7%ae%97%e7%9a%84%e7%b1%bb%e5%9e%8b%e8%bd%ac%e6%8d%a2%e8%a7%84%e5%88%99</link>
-        <guid isPermaLink="true">http://blog.comiclee.com/2015/01/javascript%e7%9a%84if%e5%88%a4%e6%96%ad%e4%bb%a5%e5%8f%8a%e7%9b%b8%e7%ad%89%e8%bf%90%e7%ae%97%e7%9a%84%e7%b1%bb%e5%9e%8b%e8%bd%ac%e6%8d%a2%e8%a7%84%e5%88%99</guid>
-        
-        <category>Javascript</category>
-        
-        
-        <category>javascript</category>
-        
-      </item>
-    
-      <item>
-        <title>思考HTML5</title>
-        <description>&lt;p&gt;HTML5已定稿，但我猜测，它仍然无法占领手机端。原先的想法都是比较乐观的，因为借鉴PC的模式，最后的胜利者是Web。如今HTML5的功能也很强大，前一阵做了一个h5页面调起手机摄像头的功能，让APP开发者直呼“要失业了”。这真有点哭笑不得，Web开发者和APP开发者看到对方都觉得自己要失业了，但未来真正怎么样，那还难说。&lt;/p&gt;
-
-&lt;p&gt;HTML5有它的优点——&lt;!--more--&gt;它更新迭代的更快、传播更好，但是它也有缺点——功能相之于APP的匮乏，性能和兼容性问题，以及它不容易留在用户的手机中。而从现实上看，现在的h5页面基本上扮演一个给APP导流的角色，它并不是宠儿。前一阵我们做了一个项目，把我们的业务放到公司的主APP上，我们选择内嵌h5页面这种轻量级的方案，其实它工作得很好，除了交互效果并不是非常流畅，以及需要主APP配合以实现和主APP的少量互动。但最后，这个项目跑了一阵，最后还是要把控制棒交到Native的手里，尽管有很多是基于非技术上的考虑，但是在别人的地盘上毕竟不是你做主。这让人对HTML5的信心遭受不小打击，那么HTML5应该怎么发展呢？&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.cyzone.cn/a/20141224/267488.html&quot;&gt;http://www.cyzone.cn/a/20141224/267488.html&lt;/a&gt; 这篇文章对HTML5做了一个定位，从目前的趋势看，谈改革或者颠覆还太早，HTML5需要一个生态圈，不管是微信还是其它的宿主，在这个生态圈里，我们要遵守游戏的规则，尽我们的职责。文章中总结的HTML5有三点好处：技术简单、传播力好、渗透力强，在它的优势下，我们可以明晰HTML5的职责——传播和渗透。&lt;/p&gt;
-
-&lt;p&gt;在传播上，HTML5页面可以在微信上疯一样地传播，例如前一阵子，一款由一名美术和一名程序使用1.5天开发完成的h5游戏《围住神经猫》，三天时间内游戏访问量超过一个亿，这是APP所无法达到的。在渗透上，HTML5可以非常低成本地放到任何APP中，例如在购物APP上下单，转到支付宝页面支付，而不需要安装支付宝的APP，在支付宝上可以跳到快的打车的页面打车，而不需要安装快的的APP。尽管HTML5在功能上受到一定的限制，但其传播性和渗透性是Native比不了的。&lt;/p&gt;
-
-&lt;p&gt;所以，让我们且放下改革或颠覆的想法，重新思考HTML5的功能和职责，让其最大限度发挥传播和渗透的作用，成为APP生态的血管。这是当下要做的。&lt;/p&gt;
-
-&lt;p&gt; &lt;/p&gt;
-</description>
-        <pubDate>Thu, 25 Dec 2014 00:00:00 +0800</pubDate>
-        <link>http://blog.comiclee.com/2014/12/%e6%80%9d%e8%80%83html5</link>
-        <guid isPermaLink="true">http://blog.comiclee.com/2014/12/%e6%80%9d%e8%80%83html5</guid>
-        
-        
-        <category>移动前端</category>
-        
-      </item>
-    
-      <item>
-        <title>java工程的overlay部署模式</title>
-        <description>&lt;p id=&quot;id-前端模块在java工程间的复用-背景&quot; style=&quot;color: #333333;&quot;&gt;
-  前端模块化后，一个模块可以在多个页面或者一个页面的多处被复用，提升了我们的开发效率，避免重复造轮子。而后，我们对复用性有了更高的要求，能不能让一个模块在多个工程（网站）间复用呢？我们的几个网站大多情况下使用的是同一套UI，我们希望尽量避免把相同的代码从这个网站拷贝到另一个网站，而是使其成为更加公共的模块，能够在不同的网站间复用。
-&lt;/p&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  maven的overlay模式能够将一个外部的war包部署到当前war包中，包括静态文件和class，最后的效果就是将两个war包合并起来了。例如我们的主模块使用了一个公共模块fe_common，按照如下方式配置overlay模式：
-&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;在主模块的pom文件里加上依赖项 将依赖的模块加入dependency节点，并指明type值为war&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;pre&gt;&amp;lt;dependency&amp;gt;
-   &amp;lt;groupId&amp;gt;com.company&amp;lt;/groupId&amp;gt;
-   &amp;lt;artifactId&amp;gt;fe_common&amp;lt;/artifactId&amp;gt;
-   &amp;lt;version&amp;gt;1.0.0-SNAPSHOT&amp;lt;/version&amp;gt;
-   &amp;lt;type&amp;gt;war&amp;lt;/type&amp;gt;
- &amp;lt;/dependency&amp;gt;&lt;/pre&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  2. 添加一个plugin——maven-war-plugin，并在overlay中设置依赖的模块，以及包含的文件
-&lt;/p&gt;
-
-&lt;pre style=&quot;color: #333333;&quot;&gt;&amp;lt;plugin&amp;gt;
-   &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;
-   &amp;lt;artifactId&amp;gt;maven-war-plugin&amp;lt;/artifactId&amp;gt;
-   &amp;lt;version&amp;gt;2.1.1&amp;lt;/version&amp;gt;
-   &amp;lt;configuration&amp;gt;
-     &amp;lt;dependentWarIncludes&amp;gt;WEB-INF/**/*,static/**/*&amp;lt;/dependentWarIncludes&amp;gt;
-     &amp;lt;overlays&amp;gt;
-       &amp;lt;overlay&amp;gt;
-         &amp;lt;groupId&amp;gt;com.company&amp;lt;/groupId&amp;gt;
-         &amp;lt;artifactId&amp;gt;fe_common&amp;lt;/artifactId&amp;gt;
-       &amp;lt;/overlay&amp;gt;
-     &amp;lt;/overlays&amp;gt;
-   &amp;lt;/configuration&amp;gt;
- &amp;lt;/plugin&amp;gt;&lt;/pre&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  经过这两步就设置好了，在编译的时候，主模块会自动下载fe_common模块的war包，在打包阶段将两个war包合并一块儿打包。
-&lt;/p&gt;
-
-&lt;h1 id=&quot;id-前端模块在java工程间的复用-注意和说明&quot; style=&quot;color: #333333;&quot;&gt;
-  注意和说明
-&lt;/h1&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  1. 由于overlay模式是将依赖包的文件合并到当前包中，所以要避免文件冲突，最好把依赖包的文件放在一个特定的目录中，如主模块的目录结构是/static/css , /static/js , /WEB-INF/views ，而fe_common的目录结构是/static/css/fe_common ,  /static/js/fe_common , /WEB-INF/views/fe_common。由于在本地开发的时候，IDE或者maven会在源代码处添加一些临时目录，而且不会删掉，所以应在.gitignore文件中添加上排除的目录
-&lt;/p&gt;
-
-&lt;pre class=&quot;lang:sh decode:true&quot;&gt;overlays
-src/main/webapp/**/fe_common&lt;/pre&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  2. overlay形式的依赖能够正确的编译打包和部署，如上所述，最后两个模块会合并到一个包里。如果是在本地调试阶段，不少IDE能够正确识别overlay的模块并引入依赖。但如果是用普通编辑器+命令行编译，则更改了fe_common后应该mvn install一下，这样对主模块执行mvn compile时才能正确取到包
-&lt;/p&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  3. 以nested方式运行jetty(mvn jetty:run)也可以识别出overlay模块，不过需要比较新的jetty plugin（最好升级到最新），但这种方式仍然不支持include ftl文件，猜测这和freemarker编译器的处理行为有关。解决方法是在maven的test-compile阶段把依赖的模块的ftl文件拷到本地，以使其正常运行。当然，这些拷过来的文件也不会被删掉，只要按照第1点所说的，在.gitignore文件中添加排除项就不会被加入到版本库中。
-&lt;/p&gt;
-
-&lt;pre class=&quot;lang:xhtml decode:true&quot;&gt;&amp;lt;plugin&amp;gt;
-  &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;
-  &amp;lt;artifactId&amp;gt;maven-dependency-plugin&amp;lt;/artifactId&amp;gt;
-  &amp;lt;version&amp;gt;2.10&amp;lt;/version&amp;gt;
-  &amp;lt;executions&amp;gt;
-    &amp;lt;execution&amp;gt;
-      &amp;lt;id&amp;gt;unpack&amp;lt;/id&amp;gt;
-      &amp;lt;phase&amp;gt;test-compile&amp;lt;/phase&amp;gt;
-      &amp;lt;goals&amp;gt;
-        &amp;lt;goal&amp;gt;unpack&amp;lt;/goal&amp;gt;
-      &amp;lt;/goals&amp;gt;
-      &amp;lt;configuration&amp;gt;
-        &amp;lt;artifactItems&amp;gt;
-          &amp;lt;artifactItem&amp;gt;
-            &amp;lt;groupId&amp;gt;com.company&amp;lt;/groupId&amp;gt;
-            &amp;lt;artifactId&amp;gt;fe_common&amp;lt;/artifactId&amp;gt;
-            &amp;lt;version&amp;gt;1.0.0-SNAPSHOT&amp;lt;/version&amp;gt;
-            &amp;lt;type&amp;gt;war&amp;lt;/type&amp;gt;
-            &amp;lt;overWrite&amp;gt;true&amp;lt;/overWrite&amp;gt;
-            &amp;lt;outputDirectory&amp;gt;${basedir}/src/main/webapp&amp;lt;/outputDirectory&amp;gt;
-            &amp;lt;includes&amp;gt;WEB-INF/views/**/*&amp;lt;/includes&amp;gt;
-          &amp;lt;/artifactItem&amp;gt;
-        &amp;lt;/artifactItems&amp;gt;
-      &amp;lt;/configuration&amp;gt;
-    &amp;lt;/execution&amp;gt;
-  &amp;lt;/executions&amp;gt;
-&amp;lt;/plugin&amp;gt;&lt;/pre&gt;
-
-&lt;p&gt;本文短地址： &lt;a href=&quot;http://blog.comiclee.com/?p=47&quot;&gt;http://blog.comiclee.com/?p=47&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;参考资料&lt;/p&gt;
-
-&lt;p style=&quot;color: #333333;&quot;&gt;
-  &lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;http://maven.apache.org/plugins/maven-war-plugin/overlays.html&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;http://maven.apache.org/plugins/maven-war-plugin/overlays.html&lt;/a&gt;&lt;/span&gt;&lt;/span&gt; &lt;span style=&quot;color: #042eee;&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;&lt;a class=&quot;external-link&quot; style=&quot;color: #3b73af;&quot; href=&quot;http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html#using-overlaid-wars&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;http://eclipse.org/jetty/documentation/current/jetty-maven-plugin.html#using-overlaid-wars&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;/p&gt;
-</description>
-        <pubDate>Wed, 24 Dec 2014 00:00:00 +0800</pubDate>
-        <link>http://blog.comiclee.com/2014/12/java%e7%9a%84overlay%e6%a8%a1%e5%bc%8f</link>
-        <guid isPermaLink="true">http://blog.comiclee.com/2014/12/java%e7%9a%84overlay%e6%a8%a1%e5%bc%8f</guid>
-        
-        
-        <category>java</category>
-        
-        <category>前端工程化</category>
+        <category>Linux</category>
         
       </item>
     

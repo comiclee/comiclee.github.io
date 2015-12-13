@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>手机html5页面进行拍照和照片处理</title>
+  <meta name="description" content="  背景">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.comiclee.com/2015/01/%e6%89%8b%e6%9c%bahtml5%e9%a1%b5%e9%9d%a2%e8%bf%9b%e8%a1%8c%e6%8b%8d%e7%85%a7%e5%92%8c%e7%85%a7%e7%89%87%e5%a4%84%e7%90%86">
+  <link rel="alternate" type="application/rss+xml" title="前端栗仔 | Thinking in Front-end" href="http://blog.comiclee.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">前端栗仔 | Thinking in Front-end</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/about/">关于我</a>
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">手机html5页面进行拍照和照片处理</h1>
+    <p class="post-meta">Jan 7, 2015 • comiclee</p>
+  </header>
+
+  <article class="post-content">
+    <h1 id="id-手机html5页面进行拍照和照片处理-背景" style="color: #333333;">
+  <strong>背景</strong>
+</h1>
+
+<p style="color: #333333;">
+   利用html5的API，在手机上也能够调起摄像头进行拍照、并对照片进行编辑。APP能做的h5也能做到，而且也不复杂。本文就介绍一下如何实现。
+</p>
+
+<!--more-->
+
+<h1 id="id-手机html5页面进行拍照和照片处理-调起系统相机" style="color: #333333;">
+  <strong>调起系统相机</strong>
+</h1>
+
+<p style="color: #333333;">
+   使用type值为file，并设置accept属性的input标签，用户点击该元素即可唤起系统的摄像头/图库的菜单。如下：
+</p>
+
+<pre style="color: #333333;">&lt;input id="camera" type="file" accept="image/*"&gt;</pre>
+
+<div class="table-wrap" style="color: #333333;">
+</div>
+
+<p style="color: #333333;">
+  需要注意的是，在安卓的WebView中，改功能默认是关闭的，需要在程序中打开该功能。<br /> 拍完照片后，可以将照片当作文件进行表单提交，但手机拍的照片文件大小一般比较大，要占用不少的宝贵的移动流量，同时也需要用户长时间的等待，所以我们对照片进行一定的压缩再提交。首先，我们需要读取拍到的照片。
+</p>
+
+<h1 id="id-手机html5页面进行拍照和照片处理-读取拍到的图片" style="color: #333333;">
+  <strong>读取拍到的图片</strong>
+</h1>
+
+<p style="color: #333333;">
+   html5提供了FileReader对象来读取本地文件，使用readAsDataURL读取文件的base64编码数据
+</p>
+
+<pre style="color: #333333;">$('#camera').change(function(evt) {
+ if (evt.target.files.length&gt;0) {
+  var file = evt.target.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+   var image = new Image();
+   image.onload = function() {
+    processImage(image);
+   };
+   image.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+ }
+});</pre>
+
+<h1 id="id-手机html5页面进行拍照和照片处理-处理照片" style="color: #333333;">
+  <strong>处理照片</strong>
+</h1>
+
+<p style="color: #333333;">
+  使用canvas进行图片处理，我们将图片按比例缩小绘制在canvas上。例如我们将图片的尺寸缩小到0.1
+</p>
+
+<pre class="table-wrap" style="color: #333333;">var canvas = document.getElementById('canvas');
+var ratio = 0.1;
+function processImage(image) {
+ var ctx = canvas.getContext(‘2d’);
+ canvas.width = image.width*ratio;
+ canvas.height = image.height*ratio;
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+}</pre>
+
+<h1 id="id-手机html5页面进行拍照和照片处理-导出处理后的照片" style="color: #333333;">
+  <strong>导出处理后的照片</strong>
+</h1>
+
+<p style="color: #333333;">
+  使用canvas的toDataURL方法导出处理后的图片的base64编码数据。可以在方法的参数中设定图片格式，默认值为image/png。
+</p>
+
+<pre class="table-wrap" style="color: #333333;">canvas.toDataURL('image/jpeg')</pre>
+
+<p style="color: #333333;">
+  由于base64格式的数据带有 <a class="external-link" style="color: #3b73af;" href="http://dataimage/" target="_blank" rel="nofollow">data:image/jpeg;base64</a>, 这类的头，后端解析的时候需要把这个头去掉，这可以在前端做，也可以在后端做。
+</p>
+
+<h1 id="id-手机html5页面进行拍照和照片处理-不得不提的坑" style="color: #333333;">
+  <strong>不得不提的坑</strong>
+</h1>
+
+<p style="color: #333333;">
+  整个图片的处理流程并不是很复杂，但当我们实际操作的时候，却发现事实远没有那么简单。我们遇到两个大坑：<br /> 1. iphone拍的照片绘制出来会被压扁<br /> 2. 照片的旋转方向不正确
+</p>
+
+<p>好在这两个问题有不少开发者也遇到过，我们在网上找到答案：<br />
+1. 照片被压扁的问题可以参考<span style="color: #042eee;"><span style="text-decoration: underline;"><a class="external-link" style="color: #3b73af;" href="http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios" target="_blank" rel="nofollow">http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios</a></span></span> ，利用答案中的detectVerticalSquash函数来对缩放比例进行修正。（这个函数出自<span style="color: #042eee;"><span style="text-decoration: underline;"><a class="external-link" style="color: #3b73af;" href="https://github.com/stomita/ios-imagefile-megapixel" target="_blank" rel="nofollow">https://github.com/stomita/ios-imagefile-megapixel</a></span></span>，感谢stomita的工作）</p>
+
+<pre class="table-wrap" style="color: #333333;">ctx.drawImage(img, sx * vertSquashRatio, sy * vertSquashRatio,
+ sw * vertSquashRatio, sh * vertSquashRatio,
+ dx, dy, dw, dh );</pre>
+
+<p style="color: #333333;">
+  2. 利用Exif.js（<span style="color: #042eee;"><span style="text-decoration: underline;"><a class="external-link" style="color: #3b73af;" href="https://github.com/jseidelin/exif-js" target="_blank" rel="nofollow">https://github.com/jseidelin/exif-js</a></span></span>）读取照片的旋转方向，并对Canvas进行旋转
+</p>
+
+<pre class="table-wrap" style="color: #333333;">$('#camera').change(function(evt) {
+ if (evt.target.files.length&gt;0) {
+  var file = evt.target.files[0];
+ 
+  var rotation = 0;
+  EXIF.getData(file, function() {
+   var orientation = EXIF.getTag(this,'Orientation');
+   switch (orientation) { //根据exif中照片的旋转信息对图片进行旋转
+    case 3: rotation=180; break;
+    case 6: rotation=90; break;
+    case 8: rotation=-90; break;
+    default : rotation=0;
+   }
+ 
+   var reader = new FileReader();
+   reader.onload = function(e) {
+    var image = new Image();
+    image.onload = function() {
+     processImage(image, rotation);
+    };
+    image.src = e.target.result;
+   };
+   reader.readAsDataURL(file);
+  });
+ }
+});
+ 
+//修改processImage函数
+var canvas = document.getElementById('canvas');
+var ratio = 0.1;
+function processImage(image,rotation) {
+ var ctx = canvas.getContext('2d');
+ var imageWidthOrigin = image.width;
+ var imageHeightOrigin = image.height;
+ var imageWidth = imageWidthOrigin*ratio;
+ var imageHeight = imageHeightOrigin*ratio;
+ 
+ canvas.width = imageWidth ;
+ 
+ canvas.height = imageHeight ;
+ var startX = 0;
+ var startY = 0;
+ 
+ if (rotation==90) {
+  canvas.width = imageHeight ;
+  canvas.height = imageWidth ;
+  startX = 0;
+  startY = -imageHeight;
+ } else if (rotation==-90) {
+  canvas.width = imageHeight ;
+  canvas.height = imageWidth ;
+  startX = -imageWidth;
+  startY = 0;
+ } else if (rotation==180 || rotation==-180) {
+  startX = -imageWidth;
+  startY = -imageHeight;
+ }
+ 
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.rotate(rotation*Math.PI/180);
+ 
+ var vertSquashRatio = detectVerticalSquash(image);
+ ctx.drawImage(image, 0, 0, imageWidthOrigin*vertSquashRatio, imageHeightOrigin*vertSquashRatio, startX, startY, imageWidth, imageHeight);
+}</pre>
+
+<p style="color: #333333;">
+</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">前端栗仔 | Thinking in Front-end</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>前端栗仔 | Thinking in Front-end</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Thinking in Front-end</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

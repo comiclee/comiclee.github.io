@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Javascript的严格模式</title>
+  <meta name="description" content="ECMAScript5定义了一种严格模式的语法，它禁用了一些不够安全的用法，同时，对一些原本静默失败的异常情况会抛出错误。使用严格模式可以帮助我们避免因为失误写出不安全的代码，我们应该尽量使用它。">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://blog.comiclee.com/2015/03/javascript%e7%9a%84%e4%b8%a5%e6%a0%bc%e6%a8%a1%e5%bc%8f">
+  <link rel="alternate" type="application/rss+xml" title="前端栗仔 | Thinking in Front-end" href="http://blog.comiclee.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">前端栗仔 | Thinking in Front-end</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/about/">关于我</a>
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Javascript的严格模式</h1>
+    <p class="post-meta">Mar 20, 2015 • comiclee</p>
+  </header>
+
+  <article class="post-content">
+    <p>ECMAScript5定义了一种严格模式的语法，它禁用了一些不够安全的用法，同时，对一些原本静默失败的异常情况会抛出错误。使用严格模式可以帮助我们避免因为失误写出不安全的代码，我们应该尽量使用它。<!--more--></p>
+
+<h1 id="section">启用严格模式</h1>
+
+<p>使用<span class="lang:js decode:true  crayon-inline">“use strict”;</span>  或者 <span class="lang:js decode:true  crayon-inline ">‘use strict’;</span>  可以指定特定的代码使用严格模式，如我们可以指定对单个函数启用严格模式。如果我们在全局使用严格模式，那么会影响到所有的代码，这可能导致一些旧代码执行出错，所以我们应该把严格模式的代码控制在我们所掌握的范围内。</p>
+
+<p>要注意的是，<span class="lang:js decode:true  crayon-inline">“use strict”;</span> 应该放在代码的顶端才能生效，放在中间是不生效的。请看下面的例子：</p>
+
+<pre class="lang:js decode:true">// OK, non-strict mode
+(function foo() {
+  arguments = 10;
+  "use strict";
+})();
+ 
+// SyntaxError, strict-mode
+(function foo() {
+  "use strict";
+  arguments = 10;
+})();</pre>
+
+<p>当然，这个顶端指的是可执行代码之前，倒不必非是第一行代码：</p>
+
+<pre class="lang:js decode:true ">// also strict mode
+ 
+"use restrict";
+"use strict";
+ 
+a = 10; // ReferenceError</pre>
+
+<h1 id="section-1"> 严格模式的作用域</h1>
+
+<p>严格模式的作用域延伸到其所有内部代码，定义了严格模式的代码，其内部嵌套的代码都处于严格模式中：</p>
+
+<pre class="lang:js decode:true ">// define strict mode in the global context,
+// i.e. for the whole program
+"use strict";
+ 
+(function foo() {
+  // strictness is "inherited" from
+  // the global context
+  eval = 10; // SyntaxError
+  (function bar() {
+    // the same - from the global context
+    arguments = 10; // SyntaxError
+  })();
+})();</pre>
+
+<p>需要明确一点是，严格模式作用于词法上下文（静态上下文）而非运行时环境，即在定义的时候其作用域就已经确定了，而非运行时才确定，这一点和闭包一样：</p>
+
+<pre class="lang:js decode:true ">// globally use a non-strict mode
+ 
+var foo = (function () {
+  "use strict";
+  return function () {
+    alert(this);
+  };
+})();
+ 
+function bar() {
+  alert(this);
+}
+ 
+// for both functions, a caller is the global context
+ 
+// but "foo" is evaluated in the strict mode
+foo(); // undefined
+ 
+// meanwhile "bar" is not
+bar(); // object</pre>
+
+<p>另外提及一点，使用Function构造函数创造的函数不会继承定义时的环境的严格模式：</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+var f = Function("eval", "arguments", " \
+  eval = 10; arguments = 20; \
+  with ({a: 30}) { \
+    alert(a + eval + arguments); \
+  }"
+);
+ 
+f(); // OK, 60</pre>
+
+<p>除非把 <span class="lang:js decode:true  crayon-inline">“use strict”;</span> 放在函数定义中：</p>
+
+<pre class="lang:js decode:true ">// non-strict globally
+ 
+var f = Function("eval", "'use strict'; alert(eval);"); // SyntaxError</pre>
+
+<h1 id="section-2"> 严格模式下的代码要求和限制</h1>
+
+<p>我们看看在严格模式下有哪些代码的要求和限制</p>
+
+<h2 id="section-3">为未来预留的关键字</h2>
+
+<p>这些关键字是为未来预留的，所以不能用于变量名和函数名中：<em>implements</em>, <em>interface</em>, <em>let</em>, <em>package</em>, <em>private</em>, <em>protected</em>, <em>public</em>, <em>static</em>, <em>yield</em> 。</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+var let = 10; // SyntaxError</pre>
+
+<h2 id="section-4"> 不支持八进制字面量</h2>
+
+<p>在非严格模式中，数字第一位是0会被解析成八进制数字：</p>
+
+<pre class="lang:js decode:true ">var x = 010; // octal number
+print(x); // 8 - in octal radix</pre>
+
+<p>这样的做法仅仅是为了向后兼容，但在严格模式下，这样的写法不被支持了，这么写将会报错：</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+var x = 010; // SyntaxError</pre>
+
+<p>另外提一点，在ES3中使用 <span class="lang:js decode:true  crayon-inline ">parseInt(‘010′)</span> 会默认转成八进制数字，不过这在ES5中已经改为转换成十进制数字了，不管有没有严格模式。</p>
+
+<h2 id="section-5"> 给未声明的变量赋值</h2>
+
+<p>众所周知，给未声明的变量赋值会自动创建一个全局作用域的变量，这是一种非常不安全的行为：</p>
+
+<pre class="lang:js decode:true ">// non-strict mode
+ 
+(function foo() {
+  // local vars
+  var x = y = 20;
+})();
+ 
+// unfortunately, "y" wasn't local
+// for "foo" function
+alert(y); // 20
+alert(x); // "x" is not defined</pre>
+
+<p>但在严格模式下，这么做将会报错：</p>
+
+<pre class="lang:js decode:true ">"use strict";
+a = 10; // ReferenceError
+ 
+var x = y = 20; // also a ReferenceError</pre>
+
+<h2 id="eval-arguments">eval 和 arguments</h2>
+
+<p>在严格模式下，eval和arguments被当作关键词。它们不能用作变量名、函数名、函数的参数名，不能给它们赋值，不能进行自增、自减操作：</p>
+
+<pre class="lang:js decode:true">"use strict";
+ 
+// SyntaxError in both cases
+var arguments;
+var eval;
+ 
+// also SyntaxError
+function eval() {}
+var foo = function arguments() {};
+
+// SyntaxError
+function foo(eval, arguments) {}
+
+(function (x) {
+  alert(arguments[0]); // 30
+  arguments = 40; // TypeError
+})(30);
+
+// SyntaxError
+++eval;
+arguments--;
+
+try {
+  throw Error("...");
+} catch (arguments) {} // SyntaxError, the same for "eval" name</pre>
+
+<p>它们可以作为对象的属性名，不过不能作为函数的属性名</p>
+
+<pre class="lang:js decode:true">"use strict";
+ 
+// OK
+var foo = {
+  eval: 10,
+  arguments: 20
+};
+ 
+// OK
+foo.eval = 10;
+foo.arguments = 20;</pre>
+
+<pre class="lang:js decode:true">"use strict";
+ 
+function foo() {
+  alert(foo.arguments); // SyntaxError
+  alert(foo.caller); // SyntaxError
+}
+ 
+foo();</pre>
+
+<p>arguments和函数参数之间的绑定将会断开，即更改一个不会影响到另一个</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+(function foo(x) {
+ 
+  alert(arguments[0]); // 10
+  arguments[0] = 20;
+ 
+  alert(x); // 10, but not 20
+ 
+  x = 30;
+  alert(arguments[0]); // 20, but not 30
+ 
+})(10);</pre>
+
+<p>eval执行在一个沙盒环境中，在其中声明的变量不会影响到全局的作用域，在eval结束后，沙盒环境也相应地消失。</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+eval("var x = 10; alert(x);"); // 10
+alert(x); // "x" is not defined</pre>
+
+<p>不过我们可以通过 indirect eval 来让eval创建全局变量。</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+("indirect", eval)("var x = 10; alert(x);"); // 10
+alert(x); // 10</pre>
+
+<h2 id="callee--caller">callee 和 caller</h2>
+
+<p>在严格模式下，callee和caller都被禁止访问。我们无法使用arguments.callee来获取匿名函数了</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+(function foo(bar) {
+  if (!bar) {
+    arguments.callee(true); // SyntaxError
+    foo(true); // OK
+  }
+})();</pre>
+
+<p>这是处于安全性的考虑，如果没有这样的限制，被调用函数有权限修改调用方的值，比如：</p>
+
+<pre class="lang:js decode:true ">// non-strict mode
+ 
+function foo(x, y) {
+  alert(x); // 10
+  bar();
+  alert(x); // 100
+}
+ 
+function bar() {
+  console.dir(bar.caller.arguments); // 10, 20
+  bar.caller.arguments[0] = 100;
+}
+ 
+foo(10, 20);</pre>
+
+<p>禁止访问arguments.callee后会引发一些不便，比如在非全局作用域下，用Function创建函数，且这个函数存在递归调用的时候：</p>
+
+<pre class="lang:js decode:true ">(function () {
+   
+  // outer name is not available,
+  // regardless strictness
+  var foo = Function("alert(foo);'");
+  foo(); // "foo" is not defined (no such name in the global context)
+   
+  // error in strict mode for arguments.callee
+  Function("'use strict; alert(arguments.callee);'")(); // TypeError
+   
+  // OK in non-strict for arguments.callee
+  Function("alert(arguments.callee);'")(); // OK, function
+ 
+})();</pre>
+
+<p>有一些方法可以绕过去，这里就不展开了，可以见<a href="http://dmitrysoshnikov.com/ecmascript/es5-chapter-2-strict-mode/#codecalleecode-and-codecallercode-restrictions" target="_blank">http://dmitrysoshnikov.com/ecmascript/es5-chapter-2-strict-mode/#codecalleecode-and-codecallercode-restrictions</a>。</p>
+
+<h2 id="section-6">重复命名</h2>
+
+<p>重复命名将会报错，包括属性名和参数名</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+// SyntaxError
+var foo = {
+  x: 10,
+  x: 10
+};
+
+// SyntaxError
+function foo(x, x) {}</pre>
+
+<p>get和set方法在严格或非严格的模式下，都不能重名</p>
+
+<pre class="lang:js decode:true ">// strict or non-strict mode
+ 
+// SyntaxError
+var foo = {
+  get x() {},
+  get x() {}
+};
+ 
+// the same with setters
+// SyntaxError
+var bar = {
+  set y(value) {},
+  set y(value) {}
+};
+
+// SyntaxError
+var foo = {
+  x: 10,
+  get x() {}
+};</pre>
+
+<h2 id="delete"> delete操作</h2>
+
+<p>实际上，变量、函数参数、函数都是无法被删除的，除非是在eval环境中，不过无法删除并不会报错。而在严格模式下，删除变量、函数参数、函数都会报错，包括在eval环境中删除也会报错。</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+var foo = {};
+ 
+function bar(x) {
+  delete x; // SyntaxError
+}
+ 
+bar(10);  // SyntaxError
+ 
+delete foo; // SyntaxError
+delete bar; // SyntaxError
+ 
+Object.defineProperty(foo, "baz", {
+  value: 10,
+  configurable: false
+});
+ 
+// but when delete a
+// property, then TypeError
+ 
+delete foo.baz; // TypeError
+ 
+// SyntaxError
+eval("var x = 10; delete x;"); // in non-strict is OK</pre>
+
+<h2 id="with">with语句</h2>
+
+<p>在严格模式下，不允许使用with语句</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+// SyntaxError
+with ({a: 10}) {
+  alert(a);
+}</pre>
+
+<h2 id="this">this值</h2>
+
+<p>在严格模式中，this值不再自动转换成一个对象， null和undefined的this值不再转换成全局对象，基本类型的值不再转换成包装对象，通过 <span class="lang:js decode:true  crayon-inline ">Function.prototype.apply</span> 和 <span class="lang:js decode:true  crayon-inline ">Function.prototype.call</span> 传入的this值不再转换成对象：</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+// undefined "this" value,
+// but not the global object
+function foo() {
+  alert(this); // undefined
+}
+ 
+foo(); // undefined
+ 
+// "this" is a primitive
+Number.prototype.test = function () {
+  alert(typeof this); // number
+};
+ 
+1..test(); // number
+ 
+foo.call(null); // null
+foo.apply(undefined); // undefined</pre>
+
+<p>this被设置为undefined可以避免忘记使用new 来调用构造函数</p>
+
+<pre class="lang:js decode:true ">// non-strict
+function A(x) {
+  this.x = x;
+}
+ 
+var a = A(10); // forget "new" keyword
+ 
+// as a result "a" is undefined,
+// because exactly this value is returned
+// implicitly from the A function
+ 
+alert(a); // undefined
+ 
+// and again created "x" property
+// of the global object, because "this"
+// is coerced to global object in the
+// non-strict in such case
+ 
+alert(x); // 10</pre>
+
+<p>在严格模式下会抛出异常</p>
+
+<pre class="lang:js decode:true ">"use strict";
+ 
+function A(x) {
+  this.x = x;
+}
+ 
+// forget "new" keyword,
+// error, because undefined.x = 10
+ 
+var a = A(10);
+ 
+var b = new A(10); // OK</pre>
+
+<h1 id="section-7">总结</h1>
+
+<p>可以看到，严格模式限制了Javascript现有的一些有风险的做法，减少了我们出错的几率。同时一些将来会废弃的用法，在严格模式中也禁用了，所以启用严格模式也能避免产生一些历史遗留代码。IE10+才支持严格模式，在低版本下会被忽略，而firefox、chrome和safari浏览器在比较早的版本就支持了，包括移动版。</p>
+
+<p>本文固定链接：<a href="http://blog.comiclee.com/?p=218">http://blog.comiclee.com/?p=218</a></p>
+
+<h1 id="section-8">参考资料</h1>
+
+<p><a href="http://dmitrysoshnikov.com/ecmascript/es5-chapter-2-strict-mode/" target="_blank">http://dmitrysoshnikov.com/ecmascript/es5-chapter-2-strict-mode/</a></p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">前端栗仔 | Thinking in Front-end</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>前端栗仔 | Thinking in Front-end</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Thinking in Front-end</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
