@@ -1,8 +1,5 @@
 ---
 title: 优秀资源分享栏目
-author: comiclee
-layout: post
-permalink: /2014/10/good-resource
 duoshuo_thread_id:
   - 1286630914637430796
 categories:

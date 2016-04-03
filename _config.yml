@@ -8,5 +8,29 @@ baseurl: "" # the subpath of your site, e.g. /blog/
 #twitter_username: jekyllrb
 #github_username:  comiclee
 
+safe: false
+encoding: utf-8
+timezone: Asia/Shanghai
+permalink: /:year/:month/:title.html
+
 # Build settings
 markdown: kramdown
+
+# highlighter: pygments
+# markdown: redcarpet
+# redcarpet:
+#   extensions:
+#     - fenced_code_blocks
+#     - no_intra_emphasis
+#     - strikethrough
+#     - autolink
+#     - tables
+
+defaults:
+  -
+    scope:
+      path: "" # 一个空的字符串代表项目中所有的文件
+      type: posts # 以前的 `post`， 在 Jekyll 2.2 里。
+    values:
+      layout: post
+      author: comiclee
