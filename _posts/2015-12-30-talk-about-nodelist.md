@@ -61,3 +61,5 @@ i=  | list顺序
 - 3
 - 4
 - 5
+
+另一种行为很类似的数据类型是HTMLCollection，document的许多属性都是HTMLCollection对象，例如document.all, document.forms, document.images, document.links, document.anchors等，还有Form.elements, Select.options等，它们也是动态的，与NodeList不同的是，HTMLCollection对象是只读的，不能给它添加新元素。
