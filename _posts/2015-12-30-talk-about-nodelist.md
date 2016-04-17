@@ -63,3 +63,5 @@ i=  | list顺序
 - 5
 
 另一种行为很类似的数据类型是HTMLCollection，document的许多属性都是HTMLCollection对象，例如document.all, document.forms, document.images, document.links, document.anchors等，还有Form.elements, Select.options等，它们也是动态的，与NodeList不同的是，HTMLCollection对象是只读的，不能给它添加新元素。
+
+此外，除了通过index来获取元素以外，还可以通过id或者name来获取元素，如document.all['main']，如果查找到id值相匹配的元素，则返回该元素，否则查找name值相匹配的元素，如果仍没找到，则返回null。

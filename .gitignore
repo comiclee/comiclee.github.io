@@ -2,3 +2,4 @@
 *.php
 *.un~
 _site
+deploy.sh
